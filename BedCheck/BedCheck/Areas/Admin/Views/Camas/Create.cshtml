@@ -1,0 +1,140 @@
+﻿@model BedCheck.Models.ViewModels.CamaVM
+
+@{
+    ViewData["Title"] = "Crear Cama";
+}
+
+<br />
+<br />
+<h3 class="text-center">Crear una nueva cama</h3>
+<form method="POST" asp-action="Create" enctype="multipart/form-data">
+    <div class="row px-2 offset-1 border">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="col-10 offset-1 mt-4">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Cama.NombreCama"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Cama.NombreCama" class="form-control" placeholder="Ingresa el nombre de la cama" />
+                    <span asp-validation-for="Cama.NombreCama" class="text-danger"></span>
+                </div>
+            </div>
+
+            <br />
+            <br />
+@* 
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Cama.EstadoCama"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Cama.EstadoCama" class="form-control" placeholder="Ingresa el Estado de la cama" />
+                    <span asp-validation-for="Cama.EstadoCama" class="text-danger"></span>
+                </div>
+            </div> *@
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Cama.EstadoCama"></label>
+                </div>
+                <div class="col-8">
+                    @Html.DropDownListFor(C => C.Cama.EstadoCama, new List<SelectListItem>
+                    {
+                    new SelectListItem { Text = "Disponible", Value = "Libre" },
+                    new SelectListItem { Text = "Ocupada", Value = "Reparar" },
+                    new SelectListItem { Text = "Mantenimiento", Value = "Mantenimiento" },
+                    new SelectListItem { Text = "Limpieza", Value = "Limpieza" }
+                    }, "-Por favor seleccione un estado-", new { @class = "form-control" })
+                    <span asp-validation-for="Cama.EstadoCama" class="text-danger"></span>
+                </div>
+            </div>
+
+            <br />
+            <br />
+
+            @* <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Cama.TipoCama"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Cama.TipoCama" class="form-control" placeholder="Ingresa el tipo de la cama" />
+                    <span asp-validation-for="Cama.TipoCama" class="text-danger"></span>
+                </div>
+            </div> *@
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Cama.TipoCama"></label>
+                </div>
+                <div class="col-8">
+                    @Html.DropDownListFor(C => C.Cama.TipoCama, new List<SelectListItem>
+                    {
+                    new SelectListItem { Text = "Estándar", Value = "Libre" },
+                    new SelectListItem { Text = "Intensivos", Value = "Reparar" },
+                    new SelectListItem { Text = "Recuperación", Value = "Mantenimiento" }
+                    }, "-Por favor seleccione un tipo-", new { @class = "form-control" })
+                    <span asp-validation-for="Cama.TipoCama" class="text-danger"></span>
+                </div>
+            </div>
+
+            <br />
+            <br />
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Cama.FechaCreacion"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Cama.FechaCreacion" class="form-control" placeholder="Ingresa la fecha de creacion de la cama" />
+                    <span asp-validation-for="Cama.FechaCreacion" class="text-danger"></span>
+                </div>
+            </div>
+
+            <br />
+            <br />
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="Habitacion">Habitacion</label>
+                </div>
+                <div class="col-8">
+                    @Html.DropDownListFor(m => m.Cama.HabitacionId, Model.ListaHabitaciones,
+                             "-Por favor seleccione una habitacion-", new { @class = "form-control" })
+                    <!-- Mostrar error específico si se alcanza el máximo de camas permitidas -->
+                    <span asp-validation-for="Cama.HabitacionId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <br />
+            <br />
+
+            < <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Cama.UrlImagen"></label>
+                </div>
+                <div class="col-8">
+                    <input type="file" name="archivos" id="subidaArchivo" class="form-control" />
+                    <span asp-validation-for="Cama.UrlImagen" class="text-danger"></span>
+                </div>
+            </div>
+
+            <br />
+            <br />
+
+            <div class="form-group-row">
+                <div class="col-8">
+                    <partial name="_VistaCrearVolver" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

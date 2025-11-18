@@ -1,0 +1,129 @@
+﻿@model BedCheck.Models.ViewModels.HomeVM
+
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="row mt-1">
+
+    <div class="col-sm-12">
+        <h1 class="text-center text-white bg-secondary p-1" >Habitaciones Hospitalarias</h1>
+
+    </div>
+
+</div>
+
+
+
+@if (Model.ListaHabitaciones.Count() > 0)
+{
+    <hr/>
+    <div class="row">
+        @foreach (var habitacion in Model.ListaHabitaciones.OrderBy(h => h.IdHabitacion))
+        {
+            <div class="col-6 mb-4">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h4>Nombre Habitación: @habitacion.NumHabitacion</h4>
+                    </div>
+
+                    <!-- Sección para mostrar enfermedades y tratamientos o mensaje si no hay -->
+                    <div class="card-body">
+                        <h5 class="text-center">Enfermedades y Tratamientos</h5>
+
+                        @if (habitacion.ListEnfermedadesTratamientos != null && habitacion.ListEnfermedadesTratamientos.Any())
+                        {
+                            <ul>
+                                @foreach (var item in habitacion.ListEnfermedadesTratamientos)
+                                {
+                                    <li>@item</li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="text-center">No hay registros de pacientes</p>
+                        }
+                    </div>
+
+
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-5 text-center">
+                                <h5>Nº Total de camas</h5>
+                                <span>@(habitacion.NumCamasTotales)</span>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <h5>Nº de Camas Libres</h5>
+                                @* <span>@(habitacion.NumCamasTotales - habitacion.CamasOcupadas)</span> *@
+                                <!-- Contar las camas libres -->
+                                <span>@Model.ListaCamas.Where(c => c.HabitacionId == habitacion.IdHabitacion && !c.CamaUsada).Count()</span>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <h5>Nº de Camas Usadas</h5>
+                                @* <span>@habitacion.CamasOcupadas</span> *@
+                                <!-- Contar las camas usadas -->
+                                <span>@Model.ListaCamas.Where(c => c.HabitacionId == habitacion.IdHabitacion && c.CamaUsada).Count()</span>
+                            </div>
+                        </div>
+
+                        <!-- Agrupar las camas por TipoCama -->
+                        @foreach (var tipoCamaGroup in Model.ListaCamas.Where(c => c.HabitacionId == habitacion.IdHabitacion)
+                       .GroupBy(c => c.TipoCama))
+                        {
+                            <!-- Botón para desplegar el grupo de camas -->
+                            <div class="row mb-2" style="margin-top: 5px;">
+                                <div class="col-md-4 text-start">
+                                    <!-- Botón alineado a la izquierda -->
+                                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#tipoCamaCollapse_@tipoCamaGroup.Key" aria-expanded="false">
+                                        @tipoCamaGroup.Key <!-- Tipo de cama -->
+                                    </button>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <!-- Camas en uso totales dentro de este grupo -->
+                                    <span>En uso: @tipoCamaGroup.Count(c => c.CamaUsada)</span>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <!-- Camas libres totales dentro de este grupo -->
+                                    <span>Libres: @(tipoCamaGroup.Count() - tipoCamaGroup.Count(c => c.CamaUsada))</span>
+                                </div>
+                            </div>
+
+                            <!-- Aquí podrías añadir el contenido colapsable si fuera necesario -->
+                            <div class="collapse" id="tipoCamaCollapse_@tipoCamaGroup.Key">
+                                <div class="card card-body">
+                                    <!-- Mostrar camas del tipo -->
+                                    @foreach (var cama in tipoCamaGroup)
+                                    {
+                                        var operacion = Model.ListaOperaciones.FirstOrDefault(o => o.CamaId == cama.IdCama);
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <!-- Mostrar el estado de la operación seguido del nombre de la cama -->
+                                                @(operacion != null ? operacion.StrEstadoOperacion : "Sin operación asignada") - @cama.NombreCama - Estado: @(cama.CamaUsada ? "En uso" : "Libre")
+                                            </div>
+                                            <div class="col-md-2">
+                                                <!-- Mostrar imagen de la cama -->
+                                                <img src="@cama.UrlImagen" alt="Imagen de @cama.NombreCama" class="img-thumbnail" style="max-width: 100px; margin-top: 10px;" />
+                                            </div>
+                                            <div class="col-md-4 text-end">
+                                                <!-- Alinea el botón a la derecha -->
+                                                <a asp-action="Detalles" asp-route-id="@cama.IdCama" class="btn btn-info ms-4" style="border-radius: 10px; margin-top: 10px;">Operaciones</a>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+
+}
+else
+{
+    <p> No hay Camas</p>
+}

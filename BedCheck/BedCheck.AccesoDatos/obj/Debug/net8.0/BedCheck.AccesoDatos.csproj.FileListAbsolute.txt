@@ -1,0 +1,40 @@
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.AccesoDatos.deps.json
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.AccesoDatos.runtimeconfig.json
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.AccesoDatos.dll
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.AccesoDatos.pdb
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.Models.dll
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.Utilidades.dll
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.Models.pdb
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.Utilidades.pdb
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.csproj.AssemblyReference.cache
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.AssemblyInfoInputs.cache
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.AssemblyInfo.cs
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.csproj.CoreCompileInputs.cache
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.sourcelink.json
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.269731D6.Up2Date
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.dll
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\refint\BedCheck.AccesoDatos.dll
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.pdb
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.genruntimeconfig.cache
+C:\Users\Victor\Desktop\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\ref\BedCheck.AccesoDatos.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.AccesoDatos.deps.json
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.AccesoDatos.runtimeconfig.json
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.AccesoDatos.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.AccesoDatos.pdb
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.Models.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.Utilidades.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.Models.pdb
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\bin\Debug\net8.0\BedCheck.Utilidades.pdb
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.csproj.AssemblyReference.cache
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.AssemblyInfoInputs.cache
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.AssemblyInfo.cs
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.csproj.CoreCompileInputs.cache
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.sourcelink.json
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.269731D6.Up2Date
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\refint\BedCheck.AccesoDatos.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.pdb
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\BedCheck.AccesoDatos.genruntimeconfig.cache
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.AccesoDatos\obj\Debug\net8.0\ref\BedCheck.AccesoDatos.dll

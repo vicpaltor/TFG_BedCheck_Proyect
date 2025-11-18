@@ -1,0 +1,126 @@
+﻿@model BedCheck.Models.ViewModels.OperacionVM
+
+@{
+    ViewData["Title"] = "Crear Operacion";
+}
+
+<br />
+<br />
+<h3 class="text-center">Crear una nueva operacion</h3>
+<form method="POST" asp-action="Create">
+    <div class="row px-2 offset-1 border">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="col-10 offset-1 mt-4">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Operacion.StrNombreOperacion"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Operacion.StrNombreOperacion" class="form-control" placeholder="Ingresa el nombre de la operacion" />
+                    <span asp-validation-for="Operacion.StrNombreOperacion" class="text-danger"></span>
+                </div>
+            </div>
+
+            <br />
+            <br />
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Operacion.StrEstadoOperacion"></label>
+                </div>
+                <div class="col-8">
+                    @Html.DropDownListFor(op => op.Operacion.StrEstadoOperacion, new List<SelectListItem>
+                    {
+                    new SelectListItem { Text = "Ingresar", Value = "Ingresar" },
+                    new SelectListItem { Text = "Alta", Value = "Alta" },
+                    new SelectListItem { Text = "Disponible", Value = "Disponible" },
+                    new SelectListItem { Text = "Mantenimiento", Value = "Mantenimiento" },
+                    new SelectListItem { Text = "Reparar", Value = "Reparar" }
+                   
+                    }, "-Por favor seleccione un estado-", new { @class = "form-control" })
+                    <span asp-validation-for="Operacion.StrEstadoOperacion" class="text-danger"></span>
+                </div>
+            </div>
+
+            <br />
+            <br />
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Operacion.StrFechaOperacion"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Operacion.StrFechaOperacion" class="form-control" placeholder="Ingresa la fecha de la operacion" />
+                    <span asp-validation-for="Operacion.StrFechaOperacion" class="text-danger"></span>
+                </div>
+            </div>
+
+            <br />
+            <br />
+
+ @*            <div class="form-group row">
+                <div class="col-4">
+                    <label for="Cama">Cama</label>
+                </div>
+                <div class="col-8">
+                    @Html.DropDownListFor(op => op.Operacion.CamaId, Model.ListaCamas,
+                             "-Por favor seleccione una cama-", new { @class = "form-control" })
+                    <span asp-validation-for="Operacion.CamaId" class="text-danger"></span>
+                </div>
+            </div> *@
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="Cama">Cama</label>
+                </div>
+                <div class="col-8">
+                    @Html.DropDownListFor(op => op.Operacion.CamaId,
+                             new SelectList(Model.ListaCamas, "Value", "Text", Model.Operacion.CamaId),
+                             "-Por favor seleccione una cama-", new { @class = "form-control" })
+                    <span asp-validation-for="Operacion.CamaId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <br />
+            <br />
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label for="Paciente">Paciente</label>
+                </div>
+                <div class="col-8">
+                    @Html.DropDownListFor(op => op.Operacion.PacienteId, Model.ListaPacientes,
+                             "-Por favor seleccione un paciente-", new { @class = "form-control" })
+                    <span asp-validation-for="Operacion.PacienteId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <br />
+            <br />
+
+            @* <div class="form-group-row">
+                <div class="col-8">
+                    <partial name="_VistaCrearVolver" />
+                </div>
+            </div> *@
+            <div class="row">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary form-control">Crear</button>
+
+                </div>
+                &nbsp;
+                <div class="col">
+                    <a asp-area="Empleado" asp-controller="Home" asp-action="Index" class="btn btn-success form-control">Volver atrás</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

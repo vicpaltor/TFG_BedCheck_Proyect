@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Lista de Enfermeros";
+}
+<div class="container mt-3">
+
+    <div class="row">
+        <div class="col-8">
+            <h2 class="text-primary">Lista de Enfermeros</h2>
+        </div>
+        <div class="col-4 text-right">
+            <a asp-action="Create" class="btn btn-primary"><i class="fa-solid fa-square-plus"></i>Crear nuevo enfermero</a>
+        </div>
+    </div>
+
+    <br />
+    <br />
+
+    <table id="tblEnfermeros" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Nombre enfermero</th>
+                <th>Rol enfermero</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/enfermero.js"></script>
+}

@@ -1,0 +1,61 @@
+﻿@model BedCheck.Models.Enfermero
+
+@{
+    ViewData["Title"] = "Editar Enfermero";
+}
+
+<br />
+<br />
+<h3 class="text-center">Editar Enfermero</h3>
+<form method="POST" asp-action="Edit">
+    <div class="row px-2 offset-1 border">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="col-10 offset-1 mt-4">
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="NombreEnfermero"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="NombreEnfermero" class="form-control" placeholder="Ingresa el nombre del paciente" />
+                    <span asp-validation-for="NombreEnfermero" class="text-danger"></span>
+                </div>
+            </div>
+
+            <br />
+            <br />
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="RolEnfermero"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="RolEnfermero" class="form-control" placeholder="Ingresa la edad del paciente" />
+                    <span asp-validation-for="RolEnfermero" class="text-danger"></span>
+                </div>
+            </div>
+
+            <br />
+            <br />
+
+            <div class="row">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary form-control">Editar Paciente</button>
+                </div>
+                &nbsp;
+                <div class="col">
+                    <a asp-action="Index" class="btn btn-success form-control">Volver atrás</a>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Lista de Operaciones";
+}
+<div class="container mt-3">
+
+    <div class="row">
+        <div class="col-8">
+            <h2 class="text-primary">Lista de Operaciones</h2>
+        </div>
+        <div class="col-4 text-right">
+            <a asp-action="Create" class="btn btn-primary"><i class="fa-solid fa-square-plus"></i>Crear nueva operacion</a>
+        </div>
+    </div>
+
+    <br />
+    <br />
+
+    <table id="tblOperaciones" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Nombre operacion</th>
+                <th>Estado de la operacion</th>
+                <th>Fecha operacion</th>
+
+                <th>Cama asignada</th>
+                <th>Paciente asignado</th>
+
+                <th>Acciones</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/operacion.js"></script>
+}
