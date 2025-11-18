@@ -138,10 +138,10 @@ wwwroot/
 
 ## 👨‍💻 Autor
 
-[Tu Nombre]  
+Victor Manuel Palos Torres
 Trabajo de Fin de Grado - ASP.NET Core MVC  
-[Universidad/Centro Educativo]  
-[Año Académico]
+Universidad de sevilla
+2024/2025
 
 ## 📄 Licencia
 
