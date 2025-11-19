@@ -844,3 +844,6 @@ C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Pr
 C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\bin\Debug\net8.0\System.Text.Encodings.Web.dll
 C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\bin\Debug\net8.0\System.Text.Json.dll
 C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.HealthChecks.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore.dll

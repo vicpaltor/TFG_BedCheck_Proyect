@@ -55,6 +55,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(typeof(BedCheck.Mapping.MappingConfig));
 // ======================
 
+// MONITORIZACIÓN DE SALUD (HEALTH CHECKS)
+// =======================================
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<ApplicationDbContext>(); // Verifica que la BD responda
+// =======================================
+
 // Inyección de dependencias
 builder.Services.AddScoped<IContenedorTrabajo, ContenedorTrabajo>();
 
@@ -71,7 +77,7 @@ else
     app.UseExceptionHandler("/Home/Error");
 }
 
-// 2. REGISTRAR EL MIDDLEWARE PERSONALIZADO
+// REGISTRAR EL MIDDLEWARE PERSONALIZADO
 // ==========================================
 // Esto capturará errores y los guardará en el Log antes de que la app se rompa
 app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -88,5 +94,8 @@ app.MapControllerRoute(
     pattern: "{area=Empleado}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+// RUTA DE SALUD
+app.MapHealthChecks("/health");
 
 app.Run();
