@@ -5,44 +5,81 @@ $(document).ready(function () {
 });
 
 function cargarDatatable() {
-    dataTable = $("#tblCamas").dataTable({
+    // CAMBIO 1: Usar 'DataTable' (con D mayúscula) es la versión moderna.
+    // Esto arregla estilos de Bootstrap y funciones como ajax.reload()
+    dataTable = $("#tblCamas").DataTable({
         "ajax": {
             "url": "/admin/camas/GetAll",
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
-            { "data": "nombreCama", "width": "5%" },
-            { "data": "camaUsada", "width": "5%" },
-            { "data": "estadoCama", "width": "5%" },
-            { "data": "tipoCama", "width": "5%" },
+            // Nombre un poco más ancho
+            { "data": "nombreCama", "width": "15%" },
+
+            // CAMBIO 2: Renderizar Ocupada/Libre con colores (Badges)
             {
-                "data": "urlImagen",
-                "render": function (imagen) {
-                    return `<img src="../${imagen}" width: "10">`
+                "data": "camaUsada",
+                "width": "10%",
+                "render": function (data) {
+                    if (data == true) {
+                        return '<span class="badge bg-danger">Ocupada</span>';
+                    } else {
+                        return '<span class="badge bg-success">Libre</span>';
+                    }
                 }
             },
-            { "data": "habitacion.numHabitacion", "width": "5%" },
+            { "data": "estadoCama", "width": "10%" },
+            { "data": "tipoCama", "width": "10%" },
+
+            // CAMBIO 3: Arreglado el HTML de la imagen y añadido estilo
+            {
+                "data": "urlImagen",
+                "width": "15%",
+                "render": function (imagen) {
+                    if (imagen) {
+                        // Ajustamos src, width correcto y un borde redondeado
+                        return `<div class="text-center">
+                                    <img src="${imagen}" style="width: 50px; border-radius: 5px; border: 1px solid #ccc;" />
+                                </div>`;
+                    } else {
+                        return '<div class="text-center">Sin imagen</div>';
+                    }
+                }
+            },
+
+            // CAMBIO 4: Habitación centrada
+            {
+                "data": "habitacion.numHabitacion",
+                "width": "10%",
+                "className": "text-center" // Centra el número
+            },
+
+            // CAMBIO 5: Botones con iconos y ancho ajustado
             {
                 "data": "idCama",
                 "render": function (data) {
-                    return `<div class="text-center">
-                                <a href="/Admin/Camas/Edit/${data}" class="btn btn-success text-white" style="cursor:pointer; width:130px;">
-                                    <i class="fa-regular fa-pen-to-square"></i> Editar
-                                </a>
-                                &nbsp;
-                                <a onclick=Delete("/Admin/Camas/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer; width:130px;">
-                                    <i class="fa-solid fa-trash-can"></i> Borrar
-                                </a>
-                            </div>`;
-                }, "width": "40%"
+                    return `
+                        <div class="text-center">
+                            <a href="/Admin/Camas/Edit/${data}" class="btn btn-success text-white" style="cursor:pointer; width:80px;">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            &nbsp;
+                            <a onclick=Delete("/Admin/Camas/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer; width:80px;">
+                                <i class="fas fa-trash-alt"></i> Borrar
+                            </a>
+                        </div>
+                    `;
+                }, "width": "30%"
             }
         ],
+        // CAMBIO 6: Usamos el idioma remoto (más limpio) o el tuyo personalizado.
+        // He dejado el tuyo pero ajustado para que se vea mejor
         "language": {
             "decimal": "",
             "emptyTable": "No hay registros",
             "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-            "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+            "infoEmpty": "Mostrando 0 a 0 de 0 Entradas",
             "infoFiltered": "(Filtrado de _MAX_ total entradas)",
             "infoPostFix": "",
             "thousands": ",",
@@ -53,25 +90,23 @@ function cargarDatatable() {
             "zeroRecords": "Sin resultados encontrados",
             "paginate": {
                 "first": "Primero",
-                "last": "Ultimo",
+                "last": "Último",
                 "next": "Siguiente",
                 "previous": "Anterior"
             }
-        },
-        "width": "100%"
+        }
     });
 }
 
-function Delete(url){
+function Delete(url) {
     swal({
-        title: "Esta seguro de borrar?",
-        text: "Este contenido no se puede recuperar!",
+        title: "¿Está seguro de borrar?",
+        text: "¡Este contenido no se puede recuperar!",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Si, borrar!",
-        closeOnconfirm: true
-
+        confirmButtonText: "¡Sí, borrar!",
+        closeOnConfirm: true
     }, function () {
         $.ajax({
             type: 'DELETE',
@@ -79,8 +114,8 @@ function Delete(url){
             success: function (data) {
                 if (data.success) {
                     toastr.success(data.message);
-                    //dataTable.ajax.reload();
-                    window.location.reload();
+                    // CAMBIO 7: Ahora sí funciona la recarga sin F5
+                    dataTable.ajax.reload();
                 }
                 else {
                     toastr.error(data.message);

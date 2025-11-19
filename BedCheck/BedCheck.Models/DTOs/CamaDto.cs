@@ -15,7 +15,7 @@ namespace BedCheck.Models.DTOs
         [Required(ErrorMessage = "El tipo de cama es obligatorio")]
         public string TipoCama { get; set; }
 
-        public string UrlImagen { get; set; } // Si tienes imagen, es útil en el DTO
+        public string? UrlImagen { get; set; } // Si tienes imagen, es útil en el DTO
 
         public int HabitacionId { get; set; }
     }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BedCheck.Models")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cd542bd1f892a6cd5a7c0ae476cc9778b910e327")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+45dd3597e07d12ebcac75b82a60fec4903407423")]
 [assembly: System.Reflection.AssemblyProductAttribute("BedCheck.Models")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BedCheck.Models")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
