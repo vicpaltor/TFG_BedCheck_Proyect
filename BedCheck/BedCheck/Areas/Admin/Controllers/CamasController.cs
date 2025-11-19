@@ -26,12 +26,14 @@ namespace BedCheck.Areas.Admin.Controllers
         }
 
         [HttpGet]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index()
         {
             return View();
         }
 
         [HttpGet]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Create()
         {
             CamaVM camaVM = new CamaVM()
@@ -44,6 +46,7 @@ namespace BedCheck.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Create(CamaVM camaVM)
         {
             // 1. Validar Nombre Duplicado
@@ -125,6 +128,7 @@ namespace BedCheck.Areas.Admin.Controllers
 
 
         [HttpGet]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -144,6 +148,7 @@ namespace BedCheck.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Edit(CamaVM camaVM)
         {
             if (ModelState.IsValid)
@@ -204,21 +209,31 @@ namespace BedCheck.Areas.Admin.Controllers
             return View(camaVM);
         }
 
+
+
         #region Llamadas a la API
 
-        [HttpGet]
+        /// <summary>
+        /// Obtiene la lista completa de camas con sus habitaciones
+        /// </summary>
+        /// <returns>JSON con data de camas</returns>
+        [HttpGet("GetAll")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetAll()
         {
-            var listaEntidades = _contenedorTrabajo.Cama.GetAll(includeProperties: "Habitacion");
-
-            // Opcional: Devolver DTOs a la API en lugar de Entidades (Recomendado)
-            // var listaDtos = _mapper.Map<IEnumerable<CamaDto>>(listaEntidades);
-            // return Json(new { data = listaDtos });
-
-            return Json(new { data = listaEntidades });
+            return Json(new { data = _contenedorTrabajo.Cama.GetAll(includeProperties: "Habitacion") });
         }
 
-        [HttpDelete]
+
+        /// <summary>
+        /// Elimina una cama por su ID
+        /// </summary>
+        /// <param name="id">El identificador de la cama</param>
+        /// <response code="200">Si se borró correctamente</response>
+        /// <response code="400">Si la cama está ocupada o no existe</response>
+        [HttpDelete("Delete/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Delete(int id)
         {
             var camaDesdeBd = _contenedorTrabajo.Cama.Get(id);

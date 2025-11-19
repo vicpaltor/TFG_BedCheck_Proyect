@@ -1,21 +1,16 @@
 using BedCheck.AccesoDatos.Data.Repository;
 using BedCheck.AccesoDatos.Data.Repository.IRepository;
 using BedCheck.Data;
-using BedCheck.Mapping; // Para encontrar tu archivo de configuración
-using BedCheck.Middleware; // <--- ¡IMPORTANTE! Asegúrate de tener este using
+using BedCheck.Middleware;
 using BedCheck.Models;
-using BedCheck.Models.Validators;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Serilog; // Importante para los logs
-using AutoMapper;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. CONFIGURACIÓN DE SERILOG
-// ==========================================
+#region 1. Configuración de Serilog (Logging)
+// ============================================================
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
@@ -24,17 +19,10 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog();
+#endregion
 
-// ==========================================
-// Configuración de Controladores + FluentValidation
-builder.Services.AddControllersWithViews();
-
-builder.Services.AddFluentValidationAutoValidation(); // Valida automáticamente al recibir datos
-builder.Services.AddFluentValidationClientsideAdapters(); // Agrega validación visual en el navegador (JS)
-builder.Services.AddValidatorsFromAssemblyContaining<CamaValidator>(); // Registra todos los validadores que estén junto a CamaValidator
-// ==========================================
-
-// Add services to the container.
+#region 2. Configuración de Base de Datos e Identity
+// ============================================================
 var connectionString = builder.Configuration.GetConnectionString("ConexionSQL")
     ?? throw new InvalidOperationException("Connection string 'ConexionSQL' not found.");
 
@@ -43,45 +31,52 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+    options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultUI();
+#endregion
 
+#region 3. Servicios Web (MVC, AutoMapper, HealthChecks)
+// ============================================================
 builder.Services.AddControllersWithViews();
 
-// REGISTRO DE AUTOMAPPER
-// ======================
-// Usamos MappingConfig en lugar de Program para que lo encuentre seguro
+// AutoMapper
 builder.Services.AddAutoMapper(typeof(BedCheck.Mapping.MappingConfig));
-// ======================
 
-// MONITORIZACIÓN DE SALUD (HEALTH CHECKS)
-// =======================================
+// Health Checks
 builder.Services.AddHealthChecks()
-    .AddDbContextCheck<ApplicationDbContext>(); // Verifica que la BD responda
-// =======================================
+    .AddDbContextCheck<ApplicationDbContext>();
 
-// Inyección de dependencias
+// Inyección de Dependencias (Repositorios)
 builder.Services.AddScoped<IContenedorTrabajo, ContenedorTrabajo>();
+#endregion
+
+#region 4. Configuración de Swagger (Documentación API)
+// ============================================================
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+#endregion
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+#region 5. Pipeline de Peticiones HTTP (Middleware)
+// ============================================================
+
+// Manejo de Excepciones
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
+    // Swagger solo visible en desarrollo
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 else
 {
-    // En producción usamos esto, pero nuestro middleware actuará antes si hay error grave
+    // Middleware personalizado para errores en producción
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
     app.UseExceptionHandler("/Home/Error");
 }
-
-// REGISTRAR EL MIDDLEWARE PERSONALIZADO
-// ==========================================
-// Esto capturará errores y los guardará en el Log antes de que la app se rompa
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-// ==========================================
 
 app.UseStaticFiles();
 
@@ -89,13 +84,16 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// Mapeo de Rutas
 app.MapControllerRoute(
     name: "default",
     pattern: "{area=Empleado}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
 
-// RUTA DE SALUD
+// Ruta de Salud
 app.MapHealthChecks("/health");
+
+#endregion
 
 app.Run();

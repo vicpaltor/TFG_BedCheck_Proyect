@@ -847,3 +847,9 @@ C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Pr
 C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.HealthChecks.dll
 C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll
 C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\bin\Debug\net8.0\BedCheck.xml
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck\obj\Debug\net8.0\BedCheck.xml
