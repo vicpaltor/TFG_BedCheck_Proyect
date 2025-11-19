@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BedCheck.AccesoDatos")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+45dd3597e07d12ebcac75b82a60fec4903407423")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+24770174f811c511c38bfbc951dc48cfc0367d4c")]
 [assembly: System.Reflection.AssemblyProductAttribute("BedCheck.AccesoDatos")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BedCheck.AccesoDatos")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
