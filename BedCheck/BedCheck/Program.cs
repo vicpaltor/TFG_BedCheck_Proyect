@@ -1,6 +1,7 @@
 using BedCheck.AccesoDatos.Data.Repository;
 using BedCheck.AccesoDatos.Data.Repository.IRepository;
 using BedCheck.Data;
+using BedCheck.Mapping; // Para encontrar tu archivo de configuración
 using BedCheck.Middleware; // <--- ¡IMPORTANTE! Asegúrate de tener este using
 using BedCheck.Models;
 using BedCheck.Models.Validators;
@@ -9,6 +10,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog; // Importante para los logs
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +48,12 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.S
     .AddDefaultUI();
 
 builder.Services.AddControllersWithViews();
+
+// REGISTRO DE AUTOMAPPER
+// ======================
+// Usamos MappingConfig en lugar de Program para que lo encuentre seguro
+builder.Services.AddAutoMapper(typeof(BedCheck.Mapping.MappingConfig));
+// ======================
 
 // Inyección de dependencias
 builder.Services.AddScoped<IContenedorTrabajo, ContenedorTrabajo>();

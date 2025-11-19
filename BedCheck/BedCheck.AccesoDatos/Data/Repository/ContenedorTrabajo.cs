@@ -30,13 +30,13 @@ namespace BedCheck.AccesoDatos.Data.Repository
 
         public IUsuarioRepository Usuario { get; private set; }
 
-        public void Dispose()
+        public void Detach(Cama camaDesdeBd)
         {
-            _db.Dispose();
+            _db.Entry(camaDesdeBd).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
         }
-        public void Save()
-        {
-            _db.SaveChanges();
-        }
+
+        public void Dispose(){_db.Dispose();}
+
+        public void Save(){_db.SaveChanges();}
     }
 }

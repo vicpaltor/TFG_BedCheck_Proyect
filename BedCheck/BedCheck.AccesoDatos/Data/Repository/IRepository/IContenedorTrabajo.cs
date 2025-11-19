@@ -17,6 +17,8 @@ namespace BedCheck.AccesoDatos.Data.Repository.IRepository
         IOperacionRepositorio Operacion { get; }
 
         IUsuarioRepository Usuario { get; }
+
+        void Detach(Cama camaDesdeBd);
         void Save();
 
     }
