@@ -1,25 +1,53 @@
 using BedCheck.AccesoDatos.Data.Repository;
 using BedCheck.AccesoDatos.Data.Repository.IRepository;
 using BedCheck.Data;
+using BedCheck.Middleware; // <--- ¡IMPORTANTE! Asegúrate de tener este using
+using BedCheck.Models;
+using BedCheck.Models.Validators;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using BedCheck.AccesoDatos.Data;
-using BedCheck.Models;
+using Serilog; // Importante para los logs
 
 var builder = WebApplication.CreateBuilder(args);
 
+// 1. CONFIGURACIÓN DE SERILOG
+// ==========================================
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/bedcheck_log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+// ==========================================
+// Configuración de Controladores + FluentValidation
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddFluentValidationAutoValidation(); // Valida automáticamente al recibir datos
+builder.Services.AddFluentValidationClientsideAdapters(); // Agrega validación visual en el navegador (JS)
+builder.Services.AddValidatorsFromAssemblyContaining<CamaValidator>(); // Registra todos los validadores que estén junto a CamaValidator
+// ==========================================
+
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("ConexionSQL") ?? throw new InvalidOperationException("Connection string 'ConexionSQL' not found.");
+var connectionString = builder.Configuration.GetConnectionString("ConexionSQL")
+    ?? throw new InvalidOperationException("Connection string 'ConexionSQL' not found.");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultUI();
+
 builder.Services.AddControllersWithViews();
 
-//Agregar contenedor de trabajo al contenedor IoC de inyeccion de dependencia
+// Inyección de dependencias
 builder.Services.AddScoped<IContenedorTrabajo, ContenedorTrabajo>();
 
 var app = builder.Build();
@@ -31,19 +59,21 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
+    // En producción usamos esto, pero nuestro middleware actuará antes si hay error grave
     app.UseExceptionHandler("/Home/Error");
 }
+
+// 2. REGISTRAR EL MIDDLEWARE PERSONALIZADO
+// ==========================================
+// Esto capturará errores y los guardará en el Log antes de que la app se rompa
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+// ==========================================
+
 app.UseStaticFiles();
 
 app.UseRouting();
 
-//app.UseAuthentication(); // Asegúrate de que esta línea esté presente para la autenticación.
-
 app.UseAuthorization();
-
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{area=Identity}/{controller=Account}/{action=Login}/{id?}"); // Redirige al login como acción por defecto.
 
 app.MapControllerRoute(
     name: "default",

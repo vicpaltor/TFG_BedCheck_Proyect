@@ -24,3 +24,16 @@ C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Pr
 C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.Models\obj\Debug\net8.0\refint\BedCheck.Models.dll
 C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.Models\obj\Debug\net8.0\BedCheck.Models.pdb
 C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck\Proyectos_net_8\BedCheck\BedCheck.Models\obj\Debug\net8.0\ref\BedCheck.Models.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck.Models\bin\Debug\net8.0\BedCheck.Models.deps.json
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck.Models\bin\Debug\net8.0\BedCheck.Models.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck.Models\bin\Debug\net8.0\BedCheck.Models.pdb
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck.Models\obj\Debug\net8.0\BedCheck.Models.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck.Models\obj\Debug\net8.0\BedCheck.Models.AssemblyInfoInputs.cache
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck.Models\obj\Debug\net8.0\BedCheck.Models.AssemblyInfo.cs
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck.Models\obj\Debug\net8.0\BedCheck.Models.csproj.CoreCompileInputs.cache
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck.Models\obj\Debug\net8.0\BedCheck.Models.sourcelink.json
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck.Models\obj\Debug\net8.0\BedCheck.Models.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck.Models\obj\Debug\net8.0\refint\BedCheck.Models.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck.Models\obj\Debug\net8.0\BedCheck.Models.pdb
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck.Models\obj\Debug\net8.0\ref\BedCheck.Models.dll
+C:\Users\Victor\Desktop\Codigo Limpio\Workspace\Curso de C# .NET\TFG_BedCheck_Proyect\BedCheck\BedCheck.Models\obj\Debug\net8.0\BedCheck.Models.csproj.AssemblyReference.cache
