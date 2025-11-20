@@ -69,6 +69,7 @@ BedCheck.sln
 │
 └── 🛠️ BedCheck.Utilidades (Transversal)
     └── Constantes y Helpers
+
 ---
 
 ## 💻 Stack Tecnológico
