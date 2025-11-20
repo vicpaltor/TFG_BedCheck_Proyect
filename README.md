@@ -69,11 +69,10 @@ BedCheck.sln
 │
 └── 🛠️ BedCheck.Utilidades (Transversal)
     └── Constantes y Helpers
-
+```
 ---
 
 ## 💻 Stack Tecnológico
-
 | Categoría | Tecnologías |
 |-----------|-------------|
 | **Core** | .NET 8.0, C# 12 |
@@ -104,15 +103,16 @@ BedCheck.sln
 2. **Restaurar dependencias**
    ```bash
    dotnet restore
+   
 3. **Configurar Base de Datos**
-Abre el archivo appsettings.json en el proyecto BedCheck y verifica tu cadena de conexión. Luego ejecuta las migraciones para crear la base de datos:
-```bash
-dotnet ef database update --project BedCheck.AccesoDatos
+    Abre el archivo appsettings.json en el proyecto BedCheck y verifica tu cadena de conexión. Luego ejecuta las migraciones para crear la base de datos:
+    ```bash
+    dotnet ef database update --project BedCheck.AccesoDatos
 
 4. **Ejecutar la aplicación**
-Presiona F5 en Visual Studio o ejecuta el siguiente comando en la terminal:
-```bash
-dotnet run --project BedCheck
+    Presiona F5 en Visual Studio o ejecuta el siguiente comando en la terminal:
+    ```bash
+    dotnet run --project BedCheck
 
 ---
 
@@ -136,8 +136,8 @@ Para verificar la integridad del sistema y ejecutar los tests unitarios (xUnit +
 2. Haz clic en el botón **Ejecutar todas**.
 
 **Opción B: Desde consola**
-```bash
-dotnet test
+    ```bash
+    dotnet test
 
 ---
 
