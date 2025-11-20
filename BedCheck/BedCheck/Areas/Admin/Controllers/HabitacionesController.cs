@@ -1,5 +1,5 @@
-﻿using BedCheck.AccesoDatos.Data.Repository.IRepository;
-using BedCheck.Models;
+﻿using BedCheck.Models.DTOs;
+using BedCheck.Servicios.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,153 +9,81 @@ namespace BedCheck.Areas.Admin.Controllers
     [Area("Admin")]
     public class HabitacionesController : Controller
     {
-        private readonly IContenedorTrabajo _contenedorTrabajo;
+        private readonly IHabitacionService _servicio;
 
-        public HabitacionesController(IContenedorTrabajo contenedorTrabajo)
+        public HabitacionesController(IHabitacionService servicio)
         {
-            _contenedorTrabajo = contenedorTrabajo;
+            _servicio = servicio;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            return View(); // Esto espera que uses DataTables en la vista
         }
 
         [HttpGet]
-        public IActionResult Create() 
+        public IActionResult Create()
         {
             return View();
-        }
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Create(Habitacion habitacion)
-        //{
-        //    if (ModelState.IsValid) 
-        //    {
-        //        //Logica para guardar en BD
-        //        habitacion.CamasOcupadas = 0;
-        //        habitacion.ListEnfermedadesTratamientos = new List<string>();
-        //        _contenedorTrabajo.Habitacion.Add(habitacion);
-        //        _contenedorTrabajo.Save();
-        //        return RedirectToAction(nameof(Index));
-
-        //    }
-        //    return View(habitacion);
-        //}
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Habitacion habitacion)
-        {
-            // Verificar si ya existe una habitación con el mismo NumHabitacion
-            var habitacionExistente = _contenedorTrabajo.Habitacion.GetAll(h => h.NumHabitacion == habitacion.NumHabitacion).FirstOrDefault();
-
-            if (habitacionExistente != null)
-            {
-                // Si existe, agregar un error al modelo y retornar la vista con el mensaje de error
-                ModelState.AddModelError("", "Ya existe esa habitacion.");
-                return View(habitacion);
-            }
-
-            if (ModelState.IsValid)
-            {
-                habitacion.CamasOcupadas = 0;
-                habitacion.ListEnfermedadesTratamientos = new List<string>();
-                _contenedorTrabajo.Habitacion.Add(habitacion);
-                _contenedorTrabajo.Save();
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(habitacion);
-        }
-
-
-
-        [HttpGet]
-        public IActionResult Edit(int id)
-        {
-            Habitacion habitacion = new Habitacion();
-            habitacion = _contenedorTrabajo.Habitacion.Get(id);
-            if (habitacion == null) 
-            {
-                return NotFound();
-            
-            }
-            return View(habitacion);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Habitacion habitacion, int id)
+        public async Task<IActionResult> Create(HabitacionDto dto)
         {
             if (ModelState.IsValid)
             {
-                //Logica para guardar en BD
-                habitacion.CamasOcupadas = 0;
-                habitacion.ListEnfermedadesTratamientos = new List<string>();
-                habitacion.IdHabitacion = id;
-
-                _contenedorTrabajo.Habitacion.Update(habitacion);
-                _contenedorTrabajo.Save();
-                return RedirectToAction(nameof(Index));
-
+                bool creado = await _servicio.Crear(dto);
+                if (creado)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError("NumHabitacion", "Ya existe una habitación con este número.");
+                }
             }
-            return View(habitacion);
+            return View(dto);
         }
 
-        #region Llamadas a la API
         [HttpGet]
-        public IActionResult GetAll() 
+        public async Task<IActionResult> Edit(int? id)
         {
-            return Json(new { data = _contenedorTrabajo.Habitacion.GetAll() });
-        
+            if (id == null) return NotFound();
+            var dto = await _servicio.ObtenerPorId(id.Value);
+            if (dto == null) return NotFound();
+            return View(dto);
         }
 
-        //[HttpDelete]
-        //public IActionResult Delete(int id)
-        //{
-        //    var objFromDb = _contenedorTrabajo.Habitacion.Get(id);
-        //    if (objFromDb == null) 
-        //    {
-        //        return Json(new { success = false, message = "Error borrando habitacion" });
-        //    }
-
-        //    _contenedorTrabajo.Habitacion.Remove(objFromDb);
-        //    _contenedorTrabajo.Save();
-        //    return Json(new { success = true, message = "Habitacion Borrada Correctamente" });
-        //}
-
-        [HttpDelete]
-        public IActionResult Delete(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(HabitacionDto dto)
         {
-            // Obtener la habitación de la base de datos
-            var habitacionDesdeDb = _contenedorTrabajo.Habitacion.Get(id);
-
-            // Verificar si la habitación existe
-            if (habitacionDesdeDb == null)
+            if (ModelState.IsValid)
             {
-                return Json(new { success = false, message = "Error al intentar borrar la habitación." });
+                await _servicio.Actualizar(dto);
+                return RedirectToAction(nameof(Index));
             }
-
-            // Verificar si existen camas asignadas a la habitación
-            var camasAsignadas = _contenedorTrabajo.Cama.GetAll(c => c.HabitacionId == id);
-
-            if (camasAsignadas.Any())
-            {
-                // Si hay camas asignadas, no permitir la eliminación y devolver un mensaje de error
-                return Json(new { success = false, message = "No se puede eliminar la habitación porque tiene camas asignadas." });
-            }
-
-            // Si no hay camas asignadas, proceder con la eliminación
-            _contenedorTrabajo.Habitacion.Remove(habitacionDesdeDb);
-            _contenedorTrabajo.Save();
-
-            return Json(new { success = true, message = "Habitación eliminada correctamente." });
+            return View(dto);
         }
 
+        // API PARA DATATABLES
+        #region API
+        [HttpGet("/Admin/Habitaciones/GetAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            var lista = await _servicio.ObtenerTodas();
+            return Json(new { data = lista });
+        }
 
+        [HttpDelete("/Admin/Habitaciones/Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            bool borrado = await _servicio.Borrar(id);
+            if (borrado) return Json(new { success = true, message = "Borrado correctamente" });
+            else return Json(new { success = false, message = "Error al borrar (quizás tiene camas)" });
+        }
         #endregion
     }
 }

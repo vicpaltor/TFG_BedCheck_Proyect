@@ -15,10 +15,22 @@ function cargarDatatable() {
             //{ "data": "idHabitacion", "width": "5%" },
             { "data": "numHabitacion", "width": "5%" },
             { "data": "camasOcupadas", "width": "5%" },
-            { "data": "listEnfermedadesTratamientos", "width": "20%" },
+            {
+                "data": "listEnfermedadesTratamientos",
+                "width": "20%",
+                "render": function (data) {
+                    // Si es un array vacío "[]" o nulo, mostramos guion
+                    if (!data || data === "[]" || data.includes("System.Collections")) {
+                        return '<span class="text-muted">-</span>';
+                    }
+                    // Si en el futuro metes datos reales, aquí podrías parsear el JSON
+                    // return JSON.parse(data).join(", "); 
+                    return data;
+                }
+            },
             { "data": "numCamasTotales", "width": "5%" },
             {
-                "data": "idHabitacion",
+                "data": "idHabitacion", "width": "40%",
                 "render": function (data) {
                     return `<div class="text-center">
                                 <a href="/Admin/Habitaciones/Edit/${data}" class="btn btn-success text-white" style="cursor:pointer; width:130px;">
@@ -29,7 +41,7 @@ function cargarDatatable() {
                                     <i class="fa-solid fa-trash-can"></i> Borrar
                                 </a>
                             </div>`;
-                }, "width": "40%"
+                }
             }
         ],
         "language": {

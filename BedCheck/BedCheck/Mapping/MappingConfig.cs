@@ -10,8 +10,12 @@ namespace BedCheck.Mapping
         public MappingConfig() {
 
             CreateMap<Cama, CamaDto>()
-    .ForMember(dest => dest.NumeroHabitacion, opt => opt.MapFrom(src => src.Habitacion.NumHabitacion))
-    .ReverseMap();
+                .ForMember(dest => dest.NumeroHabitacion, opt => opt.MapFrom(src => src.Habitacion.NumHabitacion))
+                .ReverseMap();
+
+            CreateMap<Habitacion, HabitacionDto>()
+                .ForMember(dest => dest.CamasOcupadas, opt => opt.MapFrom(src => src.CamasOcupadas))
+                .ReverseMap();
 
 
 

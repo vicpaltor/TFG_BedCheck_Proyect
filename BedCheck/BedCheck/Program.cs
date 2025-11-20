@@ -46,6 +46,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<ICamaService, CamaService>();
+builder.Services.AddScoped<IHabitacionService, HabitacionService>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(BedCheck.Mapping.MappingConfig));
