@@ -6,6 +6,8 @@ using BedCheck.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +52,27 @@ builder.Services.AddHealthChecks()
 
 // Inyección de Dependencias (Repositorios)
 builder.Services.AddScoped<IContenedorTrabajo, ContenedorTrabajo>();
+
+// SEGURIDAD: RATE LIMITING (Protección contra ataques DDoS)
+builder.Services.AddRateLimiter(options =>
+{
+    // Si se pasan del límite, devolvemos error 429 (Too Many Requests)
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // Definimos una política global:
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            // Agrupamos por IP del usuario (para limitar por persona)
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonimo",
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 100,       // Máximo 100 peticiones...
+                Window = TimeSpan.FromMinutes(1), // ...cada minuto
+                QueueLimit = 0           // No encolamos peticiones extra, las rechazamos
+            }));
+});
+
 #endregion
 
 #region 4. Configuración de Swagger (Documentación API)
@@ -79,6 +102,8 @@ else
 }
 
 app.UseStaticFiles();
+
+app.UseRateLimiter();
 
 app.UseRouting();
 
