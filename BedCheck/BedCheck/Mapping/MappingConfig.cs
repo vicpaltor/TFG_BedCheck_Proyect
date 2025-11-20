@@ -9,11 +9,12 @@ namespace BedCheck.Mapping
 
         public MappingConfig() {
 
-            // Le decimos: "Aprende a convertir de Cama a CamaDto y al revés"
-            CreateMap<Cama, CamaDto>().ReverseMap();
+            CreateMap<Cama, CamaDto>()
+    .ForMember(dest => dest.NumeroHabitacion, opt => opt.MapFrom(src => src.Habitacion.NumHabitacion))
+    .ReverseMap();
 
 
-        
+
         }
     }
 }

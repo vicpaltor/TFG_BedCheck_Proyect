@@ -50,7 +50,7 @@ function cargarDatatable() {
 
             // CAMBIO 4: Habitación centrada
             {
-                "data": "habitacion.numHabitacion",
+                "data": "numeroHabitacion",
                 "width": "10%",
                 "className": "text-center" // Centra el número
             },

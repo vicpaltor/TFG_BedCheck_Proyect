@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
+using BedCheck.Servicios.Implementacion;
+using BedCheck.Servicios.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-#region 1. Configuración de Serilog (Logging)
+#region Configuración de Serilog (Logging)
 // ============================================================
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
@@ -23,7 +25,7 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 #endregion
 
-#region 2. Configuración de Base de Datos e Identity
+#region Configuración de Base de Datos e Identity
 // ============================================================
 var connectionString = builder.Configuration.GetConnectionString("ConexionSQL")
     ?? throw new InvalidOperationException("Connection string 'ConexionSQL' not found.");
@@ -39,9 +41,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddDefaultUI();
 #endregion
 
-#region 3. Servicios Web (MVC, AutoMapper, HealthChecks)
+#region Servicios Web (MVC, AutoMapper, HealthChecks)
 // ============================================================
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<ICamaService, CamaService>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(BedCheck.Mapping.MappingConfig));
@@ -75,7 +79,7 @@ builder.Services.AddRateLimiter(options =>
 
 #endregion
 
-#region 4. Configuración de Swagger (Documentación API)
+#region Configuración de Swagger (Documentación API)
 // ============================================================
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -83,7 +87,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// ?? SEGURIDAD AVANZADA: CABECERAS HTTP
+#region SEGURIDAD AVANZADA: CABECERAS HTTP
 // ============================================================
 app.Use(async (context, next) =>
 {
@@ -105,9 +109,9 @@ app.Use(async (context, next) =>
 
     await next();
 });
-// ============================================================
+#endregion
 
-#region 5. Pipeline de Peticiones HTTP (Middleware)
+#region Pipeline de Peticiones HTTP (Middleware)
 // ============================================================
 
 // Manejo de Excepciones

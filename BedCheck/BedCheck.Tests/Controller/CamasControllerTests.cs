@@ -1,44 +1,38 @@
 ﻿using Xunit;
 using Moq;
 using BedCheck.Areas.Admin.Controllers;
-using BedCheck.AccesoDatos.Data.Repository.IRepository;
+using BedCheck.Servicios.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
-using AutoMapper;
 
 namespace BedCheck.Tests
 {
     public class CamasControllerTests
     {
-        // Definimos los Mocks (los objetos falsos)
-        private readonly Mock<IContenedorTrabajo> _mockRepo;
+        // 1. Ahora mockeamos el Servicio, no el Repositorio
+        private readonly Mock<ICamaService> _mockService;
         private readonly Mock<IWebHostEnvironment> _mockWebHost;
-        private readonly Mock<IMapper> _mockMapper;
         private readonly CamasController _controller;
 
         public CamasControllerTests()
         {
-            // 1. Inicializamos los simuladores
-            _mockRepo = new Mock<IContenedorTrabajo>();
+            // 2. Inicializamos los simuladores
+            _mockService = new Mock<ICamaService>();
             _mockWebHost = new Mock<IWebHostEnvironment>();
-            _mockMapper = new Mock<IMapper>();
 
-            // 2. Inyectamos los falsos en el controlador real
             _controller = new CamasController(
-                _mockRepo.Object,
-                _mockWebHost.Object,
-                _mockMapper.Object
+                _mockService.Object,
+                _mockWebHost.Object
             );
         }
 
         [Fact]
         public void Index_DebeRetornarVista()
         {
-            // Act (Ejecutar)
+            // Act
             var resultado = _controller.Index();
 
-            // Assert (Comprobar)
-            // Verificamos que el resultado sea de tipo ViewResult (una vista HTML)
+            // Assert
             Assert.IsType<ViewResult>(resultado);
         }
     }

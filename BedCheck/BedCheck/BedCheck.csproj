@@ -37,6 +37,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BedCheck.AccesoDatos\BedCheck.AccesoDatos.csproj" />
+    <ProjectReference Include="..\BedCheck.Servicios\BedCheck.Servicios.csproj" />
   </ItemGroup>
 
   <ItemGroup>
