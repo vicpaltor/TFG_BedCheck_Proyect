@@ -83,6 +83,30 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// ?? SEGURIDAD AVANZADA: CABECERAS HTTP
+// ============================================================
+app.Use(async (context, next) =>
+{
+    // 1. Evita que tu web se abra en un iframe (Protección contra Clickjacking)
+    context.Response.Headers.Append("X-Frame-Options", "DENY");
+
+    // 2. Evita que el navegador "adivine" el tipo de archivo (Protección MIME-Sniffing)
+    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+
+    // 3. Activa el filtro anti-XSS de los navegadores antiguos
+    context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
+
+    // 4. Controla cuánta información se envía al salir de tu web hacia otra
+    context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
+
+    // 5. (Opcional) Content Security Policy - Muy estricto, puede romper estilos si no se configura bien.
+    // De momento lo dejamos comentado para no romper DataTables o Bootstrap.
+    // context.Response.Headers.Append("Content-Security-Policy", "default-src 'self';");
+
+    await next();
+});
+// ============================================================
+
 #region 5. Pipeline de Peticiones HTTP (Middleware)
 // ============================================================
 
