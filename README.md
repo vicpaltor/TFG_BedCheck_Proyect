@@ -69,6 +69,7 @@ BedCheck.sln
 │
 └── 🛠️ BedCheck.Utilidades (Transversal)
     └── Constantes y Helpers
+---
 
 ## 💻 Stack Tecnológico
 
@@ -112,6 +113,8 @@ Presiona F5 en Visual Studio o ejecuta el siguiente comando en la terminal:
 ```bash
 dotnet run --project BedCheck
 
+---
+
 ### Endpoints de Interés
 Una vez iniciada la aplicación, puedes acceder a las nuevas funcionalidades implementadas:
 
@@ -135,6 +138,8 @@ Para verificar la integridad del sistema y ejecutar los tests unitarios (xUnit +
 ```bash
 dotnet test
 
+---
+
 ## 👨‍💻 Autor
 
 **Victor Manuel Palos Torres**  
@@ -148,6 +153,6 @@ Curso 2024/2025
 
 Este proyecto es material académico desarrollado exclusivamente para fines educativos y de evaluación como Trabajo de Fin de Grado.
 
-
+---
 
 
