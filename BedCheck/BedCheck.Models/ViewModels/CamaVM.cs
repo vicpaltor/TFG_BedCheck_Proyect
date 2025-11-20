@@ -1,15 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace BedCheck.Models.ViewModels
 {
     public class CamaVM
     {
-        public Cama Cama { get; set; }
+        public BedCheck.Models.DTOs.CamaDto Cama { get; set; }
+        
+        [ValidateNever]
         public IEnumerable<SelectListItem> ListaHabitaciones { get; set; }
     }
 }

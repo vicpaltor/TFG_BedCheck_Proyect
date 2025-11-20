@@ -1,54 +1,99 @@
 using BedCheck.AccesoDatos.Data.Repository;
 using BedCheck.AccesoDatos.Data.Repository.IRepository;
 using BedCheck.Data;
+using BedCheck.Middleware;
+using BedCheck.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using BedCheck.AccesoDatos.Data;
-using BedCheck.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("ConexionSQL") ?? throw new InvalidOperationException("Connection string 'ConexionSQL' not found.");
+#region 1. Configuración de Serilog (Logging)
+// ============================================================
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/bedcheck_log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+#endregion
+
+#region 2. Configuración de Base de Datos e Identity
+// ============================================================
+var connectionString = builder.Configuration.GetConnectionString("ConexionSQL")
+    ?? throw new InvalidOperationException("Connection string 'ConexionSQL' not found.");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+    options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultUI();
+#endregion
+
+#region 3. Servicios Web (MVC, AutoMapper, HealthChecks)
+// ============================================================
 builder.Services.AddControllersWithViews();
 
-//Agregar contenedor de trabajo al contenedor IoC de inyeccion de dependencia
+// AutoMapper
+builder.Services.AddAutoMapper(typeof(BedCheck.Mapping.MappingConfig));
+
+// Health Checks
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<ApplicationDbContext>();
+
+// Inyección de Dependencias (Repositorios)
 builder.Services.AddScoped<IContenedorTrabajo, ContenedorTrabajo>();
+#endregion
+
+#region 4. Configuración de Swagger (Documentación API)
+// ============================================================
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+#endregion
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+#region 5. Pipeline de Peticiones HTTP (Middleware)
+// ============================================================
+
+// Manejo de Excepciones
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
+    // Swagger solo visible en desarrollo
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 else
 {
+    // Middleware personalizado para errores en producción
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
     app.UseExceptionHandler("/Home/Error");
 }
+
 app.UseStaticFiles();
 
 app.UseRouting();
 
-//app.UseAuthentication(); // Asegúrate de que esta línea esté presente para la autenticación.
-
 app.UseAuthorization();
 
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{area=Identity}/{controller=Account}/{action=Login}/{id?}"); // Redirige al login como acción por defecto.
-
+// Mapeo de Rutas
 app.MapControllerRoute(
     name: "default",
     pattern: "{area=Empleado}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+// Ruta de Salud
+app.MapHealthChecks("/health");
+
+#endregion
 
 app.Run();

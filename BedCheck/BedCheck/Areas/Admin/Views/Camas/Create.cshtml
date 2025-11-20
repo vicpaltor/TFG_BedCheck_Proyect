@@ -7,6 +7,7 @@
 <br />
 <br />
 <h3 class="text-center">Crear una nueva cama</h3>
+
 <form method="POST" asp-action="Create" enctype="multipart/form-data">
     <div class="row px-2 offset-1 border">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -24,16 +25,6 @@
 
             <br />
             <br />
-@* 
-            <div class="form-group row">
-                <div class="col-4">
-                    <label asp-for="Cama.EstadoCama"></label>
-                </div>
-                <div class="col-8">
-                    <input asp-for="Cama.EstadoCama" class="form-control" placeholder="Ingresa el Estado de la cama" />
-                    <span asp-validation-for="Cama.EstadoCama" class="text-danger"></span>
-                </div>
-            </div> *@
 
             <div class="form-group row">
                 <div class="col-4">
@@ -54,16 +45,6 @@
             <br />
             <br />
 
-            @* <div class="form-group row">
-                <div class="col-4">
-                    <label asp-for="Cama.TipoCama"></label>
-                </div>
-                <div class="col-8">
-                    <input asp-for="Cama.TipoCama" class="form-control" placeholder="Ingresa el tipo de la cama" />
-                    <span asp-validation-for="Cama.TipoCama" class="text-danger"></span>
-                </div>
-            </div> *@
-
             <div class="form-group row">
                 <div class="col-4">
                     <label asp-for="Cama.TipoCama"></label>
@@ -76,19 +57,6 @@
                     new SelectListItem { Text = "Recuperación", Value = "Mantenimiento" }
                     }, "-Por favor seleccione un tipo-", new { @class = "form-control" })
                     <span asp-validation-for="Cama.TipoCama" class="text-danger"></span>
-                </div>
-            </div>
-
-            <br />
-            <br />
-
-            <div class="form-group row">
-                <div class="col-4">
-                    <label asp-for="Cama.FechaCreacion"></label>
-                </div>
-                <div class="col-8">
-                    <input asp-for="Cama.FechaCreacion" class="form-control" placeholder="Ingresa la fecha de creacion de la cama" />
-                    <span asp-validation-for="Cama.FechaCreacion" class="text-danger"></span>
                 </div>
             </div>
 
@@ -111,9 +79,6 @@
             <br />
 
             < <div class="form-group row">
-                <div class="col-4">
-                    <label asp-for="Cama.UrlImagen"></label>
-                </div>
                 <div class="col-8">
                     <input type="file" name="archivos" id="subidaArchivo" class="form-control" />
                     <span asp-validation-for="Cama.UrlImagen" class="text-danger"></span>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.11.35303.130
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11205.157 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BedCheck", "BedCheck\BedCheck.csproj", "{FF69DA85-E05F-48E8-8814-639F9111D10B}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BedCheck.Models", "BedCheck.Models\BedCheck.Models.csproj", "{9B197286-B9E8-4887-8349-247047F99DF8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BedCheck.Utilidades", "BedCheck.Utilidades\BedCheck.Utilidades.csproj", "{D5491740-A5B2-4633-97A9-3BD50CD67C93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BedCheck.Tests", "BedCheck.Tests\BedCheck.Tests.csproj", "{9A087760-AFF7-445D-B5B8-2EC310C75947}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{D5491740-A5B2-4633-97A9-3BD50CD67C93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5491740-A5B2-4633-97A9-3BD50CD67C93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5491740-A5B2-4633-97A9-3BD50CD67C93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A087760-AFF7-445D-B5B8-2EC310C75947}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A087760-AFF7-445D-B5B8-2EC310C75947}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A087760-AFF7-445D-B5B8-2EC310C75947}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A087760-AFF7-445D-B5B8-2EC310C75947}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
