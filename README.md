@@ -1,161 +1,71 @@
-# TFG BedCheck - Sistema de Control de Camas Hospitalarias
+# 🏥 TFG BedCheck - Sistema de Control de Camas Hospitalarias
+
+![Status](https://img.shields.io/badge/Estado-En_Desarrollo-yellow)
+![.NET](https://img.shields.io/badge/.NET-8.0-purple)
+![Build](https://img.shields.io/badge/Build-Passing-brightgreen)
 
 ## 📋 Descripción del Proyecto
 
-**BedCheck** es un Trabajo de Fin de Grado (TFG) que consiste en una aplicación web desarrollada en **ASP.NET Core MVC** utilizando **C#** y **.NET 8.0** para la gestión y control de camas hospitalarias.
+**BedCheck** es un Trabajo de Fin de Grado (TFG) desarrollado en **ASP.NET Core 8.0 MVC** para la gestión integral de recursos hospitalarios. El sistema moderniza el control de camas, pacientes y personal mediante una arquitectura robusta, escalable y orientada a servicios.
 
-El sistema permite realizar un seguimiento completo del estado de las camas, habitaciones, pacientes, operaciones y personal de enfermería en un entorno hospitalario.
-
-## 🎯 Objetivos del TFG
-
-- Desarrollar una aplicación web funcional para la gestión hospitalaria
-- Implementar un sistema de autenticación y autorización basado en roles
-- Crear una arquitectura en capas siguiendo principios de clean code
-- Utilizar Entity Framework Core para la persistencia de datos
-- Aplicar patrones de diseño como Repository y Unit of Work
-
-## 🏗️ Arquitectura del Proyecto
-
-El proyecto está estructurado en **4 capas** principales:
-
-```
-BedCheck.sln
-│
-├── BedCheck                          # Capa de presentación (MVC)
-│   ├── Areas/
-│   ├── Controllers/
-│   ├── Views/
-│   └── wwwroot/
-│
-├── BedCheck.AccesoDatos              # Capa de acceso a datos
-│   ├── Data/
-│   ├── Repository/
-│   └── Migrations/
-│
-├── BedCheck.Models                   # Capa de modelos de dominio
-│   ├── Cama.cs
-│   ├── Habitacion.cs
-│   ├── Paciente.cs
-│   ├── Operacion.cs
-│   └── Enfermero.cs
-│
-└── BedCheck.Utilidades              # Capa de utilidades y constantes
-    └── CNT.cs
-```
-
-## 🔑 Entidades Principales
-
-- **Cama**: Gestión de camas individuales con estado, tipo y asignación
-- **Habitación**: Control de habitaciones y capacidad
-- **Paciente**: Información de pacientes, enfermedades y tratamientos
-- **Operación**: Registro de operaciones quirúrgicas
-- **Enfermero**: Gestión del personal de enfermería
-- **ApplicationUser**: Usuario del sistema con roles definidos
-
-## 💻 Tecnologías Utilizadas
-
-- **Framework**: ASP.NET Core 8.0 MVC
-- **Lenguaje**: C# 12
-- **ORM**: Entity Framework Core 8.0
-- **Base de Datos**: SQL Server
-- **Autenticación**: ASP.NET Core Identity
-- **Patrón de diseño**: Repository Pattern, Unit of Work
-- **Frontend**: Razor Pages, HTML5, CSS3, JavaScript
-
-## 📦 Dependencias Principales
-
-```xml
-- Microsoft.AspNetCore.Identity.EntityFrameworkCore (8.0.8)
-- Microsoft.EntityFrameworkCore.SqlServer (8.0.8)
-- Microsoft.EntityFrameworkCore.Tools (8.0.8)
-- Microsoft.AspNetCore.Mvc.ViewFeatures
-```
-
-## 🔧 Configuración del Proyecto
-
-### Requisitos Previos
-
-- Visual Studio 2022 (v17.11 o superior)
-- .NET 8.0 SDK
-- SQL Server 2019 o superior
-
-### Configuración de Base de Datos
-
-1. Actualizar la cadena de conexión en `appsettings.json`:
-
-```json
-"ConnectionStrings": {
-  "ConexionSQL": "Server=TU_SERVIDOR;Database=BedCheckBDNET8;User ID=sa;Password=TU_PASSWORD;Trusted_Connection=true;Encrypt=false;MultipleActiveResultSets=true"
-}
-```
-
-2. Ejecutar las migraciones:
-
-```bash
-dotnet ef database update
-```
-
-### Roles de Usuario
-
-El sistema implementa tres roles principales:
-
-- **Administrador**: Control total del sistema
-- **Enfermero**: Gestión de pacientes y camas
-- **Cliente**: Consulta de información
-
-## 🚀 Ejecución del Proyecto
-
-1. Clonar el repositorio
-2. Abrir `BedCheck.sln` en Visual Studio
-3. Configurar la cadena de conexión
-4. Restaurar paquetes NuGet
-5. Ejecutar las migraciones
-6. Presionar F5 para ejecutar
-
-## 📊 Documentación Adicional
-
-### Generación de Diagramas
-
-Para generar la documentación visual del proyecto:
-
-1. **Crear flechas con codos redondeados**:
-   - Click derecho en la flecha
-   - Line Style > Orthogonal rounded
-
-2. **Generar tablas y diagramas**:
-   - Click derecho en la flecha
-   - Generate Documentation
-   - Template (cargar plantilla)
-   - Generate
-
-## 📁 Estructura de Carpetas
-
-```
-wwwroot/
-└── imagenes/
-    └── camas/          # Imágenes de las camas
-```
-
-## 👨‍💻 Autor
-
-Victor Manuel Palos Torres
-Trabajo de Fin de Grado - ASP.NET Core MVC  
-Universidad de sevilla
-2024/2025
-
-## 📄 Licencia
-
-Este proyecto es material académico desarrollado como Trabajo de Fin de Grado.
-
-## 📝 Notas del Desarrollo
-
-- La aplicación utiliza Areas para organizar las diferentes secciones
-- Se implementa el patrón Repository para abstraer el acceso a datos
-- El sistema de autenticación usa ASP.NET Core Identity
-- La ruta por defecto del sistema es: `{area=Empleado}/{controller=Home}/{action=Index}`
+El proyecto va más allá de un CRUD básico, implementando patrones de diseño avanzados, validaciones robustas, monitoreo de salud del sistema y documentación automática de API.
 
 ---
 
-**Estado del Proyecto**: En Desarrollo  
-**Versión**: 1.0.0  
-**Fecha de Última Actualización**: [Fecha]
+## 🚀 Mejoras Técnicas e Innovaciones (Novedades)
+
+Este proyecto implementa prácticas de desarrollo profesional modernas:
+
+### 🛡️ Arquitectura y Seguridad
+- **Patrón DTO (Data Transfer Objects)**: Desacoplamiento total entre la Base de Datos y la Vista usando `AutoMapper`.
+- **FluentValidation**: Reglas de validación de negocio separadas de los modelos para un código más limpio.
+- **Middleware Personalizado**: Gestión global de excepciones para evitar errores no controlados.
+
+### 👁️ Observabilidad y Documentación
+- **Serilog**: Sistema de Logging estructurado (escribe logs diarios en archivos de texto).
+- **Health Checks**: Sistema de monitoreo de salud (`/health`) para verificar el estado de la BD y la App.
+- **Swagger / OpenAPI**: Documentación automática e interactiva de la API REST interna.
+
+### ⚡ Experiencia de Usuario (UX)
+- **DataTables.js**: Tablas interactivas con búsqueda instantánea, paginación y ordenación asíncrona (AJAX).
+- **Feedback Visual**: Uso de SweetAlert y Toastr para notificaciones al usuario.
+
+### 🧪 Calidad de Código (Testing)
+- **Pruebas Unitarias (xUnit)**: Tests automatizados para asegurar la calidad del código.
+- **Mocking (Moq)**: Simulación de dependencias para probar controladores de forma aislada.
+
+---
+
+## 🏗️ Arquitectura del Proyecto
+
+El proyecto sigue una arquitectura en capas estricta para asegurar la mantenibilidad:
+
+```text
+BedCheck.sln
+│
+├── 🌐 BedCheck (Capa Web / Presentación)
+│   ├── Areas/                  # Módulos (Admin, Empleado, etc.)
+│   ├── Controllers/            # Controladores MVC y API
+│   ├── Mapping/                # Configuraciones de AutoMapper
+│   ├── Middleware/             # Gestión de errores y pipeline
+│   ├── Views/                  # Interfaz de usuario (Razor)
+│   └── wwwroot/
+│       └── js/camas.js         # Lógica DataTables
+│
+├── 🗄️ BedCheck.AccesoDatos (Persistencia)
+│   ├── Data/                   # DbContext
+│   ├── Repository/             # Implementación Patrón Repositorio
+│   └── Migrations/             # Historial de cambios de BD
+│
+├── 📦 BedCheck.Models (Dominio)
+│   ├── DTOs/                   # Objetos de Transferencia de Datos (Seguros)
+│   ├── Validators/             # Reglas de FluentValidation
+│   ├── ViewModels/             # Modelos específicos para Vistas
+│   └── Entidades/              # (Cama, Paciente, etc.)
+│
+├── 🧪 BedCheck.Tests (Quality Assurance)
+│   ├── UnitTests/              # Pruebas de DTOs y Lógica
+│   └── ControllerTests/        # Pruebas de Controladores con Moq
+│
+└── 🛠️ BedCheck.Utilidades (Transversal)
+    └── Constantes y Helpers
