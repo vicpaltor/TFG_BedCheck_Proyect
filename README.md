@@ -69,3 +69,85 @@ BedCheck.sln
 │
 └── 🛠️ BedCheck.Utilidades (Transversal)
     └── Constantes y Helpers
+
+## 💻 Stack Tecnológico
+
+| Categoría | Tecnologías |
+|-----------|-------------|
+| **Core** | .NET 8.0, C# 12 |
+| **Datos** | SQL Server, Entity Framework Core 8.0.11 |
+| **Arquitectura** | Repository Pattern, Unit of Work, DTOs |
+| **Validación** | FluentValidation.AspNetCore |
+| **Mapeo** | AutoMapper |
+| **Logging** | Serilog |
+| **Testing** | xUnit, Moq |
+| **Frontend** | Bootstrap 5, DataTables.js, jQuery |
+| **API Doc** | Swashbuckle (Swagger UI) |
+
+---
+
+## 🔧 Configuración y Ejecución
+
+### Requisitos Previos
+- Visual Studio 2022 (v17.8 o superior)
+- .NET 8.0 SDK
+- SQL Server LocalDB o Express
+
+### Pasos para iniciar
+
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/tu-usuario/BedCheck.git
+
+2. **Restaurar dependencias**
+   ```bash
+   dotnet restore
+3. **Configurar Base de Datos**
+Abre el archivo appsettings.json en el proyecto BedCheck y verifica tu cadena de conexión. Luego ejecuta las migraciones para crear la base de datos:
+```bash
+dotnet ef database update --project BedCheck.AccesoDatos
+
+4. **Ejecutar la aplicación**
+Presiona F5 en Visual Studio o ejecuta el siguiente comando en la terminal:
+```bash
+dotnet run --project BedCheck
+
+### Endpoints de Interés
+Una vez iniciada la aplicación, puedes acceder a las nuevas funcionalidades implementadas:
+
+- **Web Principal**: `https://localhost:PORT/`
+- **Documentación API (Swagger)**: `https://localhost:PORT/swagger`
+- **Monitor de Salud**: `https://localhost:PORT/health`
+
+*(Nota: Reemplaza `PORT` por el puerto que te asigne Visual Studio, por ejemplo: 5134)*
+
+---
+
+## 🧪 Ejecución de Pruebas
+
+Para verificar la integridad del sistema y ejecutar los tests unitarios (xUnit + Moq):
+
+**Opción A: Desde Visual Studio**
+1. Abre el menú **Prueba** > **Explorador de Pruebas**.
+2. Haz clic en el botón **Ejecutar todas**.
+
+**Opción B: Desde consola**
+```bash
+dotnet test
+
+## 👨‍💻 Autor
+
+**Victor Manuel Palos Torres**  
+Trabajo de Fin de Grado - Ingeniería Informática  
+Universidad de Sevilla  
+Curso 2024/2025
+
+---
+
+## 📄 Licencia
+
+Este proyecto es material académico desarrollado exclusivamente para fines educativos y de evaluación como Trabajo de Fin de Grado.
+
+
+
+
