@@ -1,29 +1,31 @@
-﻿using BedCheck.AccesoDatos.Data.Repository.IRepository;
-using BedCheck.Models;
+﻿using BedCheck.Models.DTOs;
+using BedCheck.Servicios.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using BedCheck.Utilidades;
 
 namespace BedCheck.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Enfermero")]
+    [Authorize(Roles = CNT.Administrador)]
     [Area("Admin")]
     public class PacientesController : Controller
     {
-        private readonly IContenedorTrabajo _contenedorTrabajo;
+        private readonly IPacienteService _servicio;
 
-        public PacientesController(IContenedorTrabajo contenedorTrabajo)
+        public PacientesController(IPacienteService servicio)
         {
-            _contenedorTrabajo = contenedorTrabajo;
+            _servicio = servicio;
         }
 
         [HttpGet]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index()
         {
             return View();
         }
 
-
         [HttpGet]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Create()
         {
             return View();
@@ -31,67 +33,55 @@ namespace BedCheck.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Paciente paciente)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IActionResult> Create(PacienteDto dto)
         {
             if (ModelState.IsValid)
             {
-                _contenedorTrabajo.Paciente.Add(paciente);
-                _contenedorTrabajo.Save();
-                return RedirectToAction(nameof(Index));
-
+                bool creado = await _servicio.Crear(dto);
+                if (creado) return RedirectToAction(nameof(Index));
+                // Aquí podrías añadir ModelState.AddModelError si el servicio devolviera false por duplicado
             }
-            return View(paciente);
+            return View(dto);
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IActionResult> Edit(int? id)
         {
-            Paciente paciente = new Paciente();
-            paciente = _contenedorTrabajo.Paciente.Get(id);
-            if (paciente == null)
-            {
-                return NotFound();
-
-            }
-            return View(paciente);
+            if (id == null) return NotFound();
+            var dto = await _servicio.ObtenerPorId(id.Value);
+            if (dto == null) return NotFound();
+            return View(dto);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Paciente paciente, int id)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IActionResult> Edit(PacienteDto dto)
         {
             if (ModelState.IsValid)
             {
-                paciente.IdPaciente = id;
-
-                _contenedorTrabajo.Paciente.Update(paciente);
-                _contenedorTrabajo.Save();
+                await _servicio.Actualizar(dto);
                 return RedirectToAction(nameof(Index));
-
             }
-            return View(paciente);
+            return View(dto);
         }
 
-        #region Llamadas a la API
-        [HttpGet]
-        public IActionResult GetAll()
+        #region API DataTables
+        [HttpGet("/Admin/Pacientes/GetAll")]
+        public async Task<IActionResult> GetAll()
         {
-            return Json(new { data = _contenedorTrabajo.Paciente.GetAll() });
-
+            var lista = await _servicio.ObtenerTodos();
+            return Json(new { data = lista });
         }
 
-        [HttpDelete]
-        public IActionResult Delete(int id)
+        [HttpDelete("/Admin/Pacientes/Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            var objFromDb = _contenedorTrabajo.Paciente.Get(id);
-            if (objFromDb == null)
-            {
-                return Json(new { success = false, message = "Error borrando paciente" });
-            }
-
-            _contenedorTrabajo.Paciente.Remove(objFromDb);
-            _contenedorTrabajo.Save();
-            return Json(new { success = true, message = "Paciente Borrado Correctamente" });
+            bool borrado = await _servicio.Borrar(id);
+            if (borrado) return Json(new { success = true, message = "Paciente eliminado correctamente" });
+            return Json(new { success = false, message = "Error al eliminar" });
         }
         #endregion
     }

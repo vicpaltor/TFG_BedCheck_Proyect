@@ -5,67 +5,79 @@ $(document).ready(function () {
 });
 
 function cargarDatatable() {
-    dataTable = $("#tblPacientes").dataTable({
+    dataTable = $("#tblPacientes").DataTable({
         "ajax": {
-            "url": "/admin/pacientes/GetAll",
+            "url": "/Admin/Pacientes/GetAll",
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
-            { "data": "strNombrePaciente", "width": "10%" },
-            { "data": "intEdadPaciente", "width": "5%" },
-            { "data": "strSexoPaciente", "width": "10%" },
-            { "data": "listEnfermedades", "width": "20%" },
-            { "data": "listTratamiento", "width": "20%" },
+            { "data": "nombre", "width": "15%" },
+            { "data": "edad", "width": "5%" },
+            { "data": "sexo", "width": "10%" },
+            {
+                "data": "enfermedades",
+                "width": "20%",
+                "render": function (data) {
+                    return data ? data : '<span class="text-muted">-</span>';
+                }
+            },
+            {
+                "data": "tratamientos",
+                "width": "20%",
+                "render": function (data) {
+                    return data ? data : '<span class="text-muted">-</span>';
+                }
+            },
             {
                 "data": "idPaciente",
                 "render": function (data) {
-                    return `<div class="text-center">
-                                <a href="/Admin/Pacientes/Edit/${data}" class="btn btn-success text-white" style="cursor:pointer; width:130px;">
-                                    <i class="fa-regular fa-pen-to-square"></i> Editar
-                                </a>
-                                &nbsp;
-                                <a onclick=Delete("/Admin/Pacientes/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer; width:130px;">
-                                    <i class="fa-solid fa-trash-can"></i> Borrar
-                                </a>
-                            </div>`;
-                }, "width": "40%"
+                    return `
+                        <div class="text-center">
+                            <a href="/Admin/Pacientes/Edit/${data}" class="btn btn-success text-white" style="cursor:pointer; width:80px;">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            &nbsp;
+                            <a onclick=Delete("/Admin/Pacientes/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer; width:80px;">
+                                <i class="fas fa-trash-alt"></i> Borrar
+                            </a>
+                        </div>
+                    `;
+                }, "width": "20%"
             }
         ],
         "language": {
             "decimal": "",
-            "emptyTable": "No hay registros",
-            "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-            "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-            "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+            "emptyTable": "No hay datos disponibles en la tabla",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+            "infoEmpty": "Mostrando 0 a 0 de 0 entradas",
+            "infoFiltered": "(filtrado de _MAX_ entradas totales)",
             "infoPostFix": "",
             "thousands": ",",
-            "lengthMenu": "Mostrar _MENU_ Entradas",
+            "lengthMenu": "Mostrar _MENU_ entradas",
             "loadingRecords": "Cargando...",
             "processing": "Procesando...",
             "search": "Buscar:",
-            "zeroRecords": "Sin resultados encontrados",
+            "zeroRecords": "No se encontraron coincidencias",
             "paginate": {
                 "first": "Primero",
-                "last": "Ultimo",
+                "last": "Último",
                 "next": "Siguiente",
                 "previous": "Anterior"
             }
-        },
-        "width": "100%"
+        }
     });
 }
 
-function Delete(url){
+function Delete(url) {
     swal({
-        title: "Esta seguro de borrar?",
-        text: "Este contenido no se puede recuperar!",
+        title: "¿Está seguro?",
+        text: "No se podrá recuperar la información",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Si, borrar!",
-        closeOnconfirm: true
-
+        confirmButtonText: "Sí, borrar",
+        closeOnConfirm: true
     }, function () {
         $.ajax({
             type: 'DELETE',
@@ -73,10 +85,8 @@ function Delete(url){
             success: function (data) {
                 if (data.success) {
                     toastr.success(data.message);
-                    //dataTable.ajax.reload();
-                    window.location.reload();
-                }
-                else {
+                    dataTable.ajax.reload();
+                } else {
                     toastr.error(data.message);
                 }
             }
