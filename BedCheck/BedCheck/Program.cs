@@ -47,6 +47,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<ICamaService, CamaService>();
 builder.Services.AddScoped<IHabitacionService, HabitacionService>();
+builder.Services.AddScoped<IPacienteService, PacienteService>();
+
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(BedCheck.Mapping.MappingConfig));

@@ -17,7 +17,13 @@ namespace BedCheck.Mapping
                 .ForMember(dest => dest.CamasOcupadas, opt => opt.MapFrom(src => src.CamasOcupadas))
                 .ReverseMap();
 
-
+            CreateMap<Paciente, PacienteDto>()
+                .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.StrNombrePaciente))
+                .ForMember(dest => dest.Edad, opt => opt.MapFrom(src => src.IntEdadPaciente))
+                .ForMember(dest => dest.Sexo, opt => opt.MapFrom(src => src.StrSexoPaciente))
+                .ForMember(dest => dest.Enfermedades, opt => opt.MapFrom(src => src.ListEnfermedades))
+                .ForMember(dest => dest.Tratamientos, opt => opt.MapFrom(src => src.ListTratamiento))
+                .ReverseMap();
 
         }
     }
