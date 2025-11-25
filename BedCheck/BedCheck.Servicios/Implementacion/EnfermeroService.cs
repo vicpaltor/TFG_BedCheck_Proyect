@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace BedCheck.Servicios.Implementacion
 {
-    // Implementamos la interfaz que definimos
     public class EnfermeroService : IEnfermeroService
     {
-        // Inyección de dependencias (para interactuar con DB y mapear)
         private readonly IEnfermeroRepositorio _enfermeroRepository;
         private readonly IMapper _mapper;
 
@@ -21,12 +19,18 @@ namespace BedCheck.Servicios.Implementacion
             _mapper = mapper;
         }
 
-        // Dejamos el método A IMPLEMENTAR para la fase GREEN
         public async Task<int> Crear(EnfermeroDto dto)
         {
-            // Falla de compilación/ejecución si no está implementado o lanza NotImplementedException.
-            // Esto garantiza que la prueba en RED ahora compile correctamente, ¡pero fallará al ejecutar!
-            throw new NotImplementedException();
+      
+            if (string.IsNullOrWhiteSpace(dto.NombreEnfermero))
+            {
+                throw new ArgumentException("El nombre del enfermero no puede estar vacío.", nameof(dto.NombreEnfermero));
+            }
+
+            var enfermeroEntity = _mapper.Map<Enfermero>(dto);
+            await _enfermeroRepository.AddAsync(enfermeroEntity);
+            return enfermeroEntity.IdEnfermero;
+
         }
     }
 }

@@ -96,5 +96,16 @@ namespace BedCheck.AccesoDatos.Data.Repository
         {
             Context.Entry(entity).State = EntityState.Detached;
         }
+
+        public async Task AddAsync(T entity)
+        {
+            // Usamos el método asíncrono proporcionado por Entity Framework Core.
+            await dbSet.AddAsync(entity);
+
+            // NOTA: La llamada a SaveChangesAsync() generalmente se realiza en la 
+            // capa de Contenedor de Trabajo (IContenedorTrabajo) para agrupar
+            // múltiples operaciones de repositorio en una sola transacción.
+        }
+
     }
 }

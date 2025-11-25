@@ -9,6 +9,7 @@ namespace BedCheck.AccesoDatos.Data.Repository.IRepository
 {
     public interface IRepository<T> where T : class
     {
+        // ... Métodos de Lectura Síncronos existentes (Get, GetAll, GetFirstOrDefault)
         T Get(int id);
 
         IEnumerable<T> GetAll(
@@ -21,8 +22,15 @@ namespace BedCheck.AccesoDatos.Data.Repository.IRepository
             Expression<Func<T, bool>>? filter = null,
             string? includeProperties = null
             );
+
         void Add(T entity);
         void Remove(int id);
         void Remove(T entity);
+
+        //VERSIÓN ASÍNCRONA
+        Task AddAsync(T entity);
+
+
+
     }
 }
