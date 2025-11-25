@@ -2,11 +2,6 @@
 using BedCheck.Data;
 using BedCheck.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BedCheck.AccesoDatos.Data.Repository
 {
@@ -30,7 +25,7 @@ namespace BedCheck.AccesoDatos.Data.Repository
             var pacienteDesdeBb = _db.Paciente.FirstOrDefault(s => s.IdPaciente == paciente.IdPaciente);
             if (pacienteDesdeBb == null)
             {
-                throw new Exception("No se encontró el enfermero con el Id proporcionado.");
+                throw new Exception("No se encontró el paciente con el Id proporcionado.");
             }
             pacienteDesdeBb.StrNombrePaciente = paciente.StrNombrePaciente;
             pacienteDesdeBb.IntEdadPaciente = paciente.IntEdadPaciente;
