@@ -19,10 +19,10 @@ jobs:
         dotnet-version: 8.0.x
         
     - name: Restaurar dependencias
-      run: dotnet restore
+      run: dotnet restore BedCheck/BedCheck.sln
 
     - name: Compilar proyecto
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build BedCheck/BedCheck.sln --no-restore --configuration Release
 
     - name: Ejecutar Tests
-      run: dotnet test --no-build --verbosity normal --configuration Release
+      run: dotnet test BedCheck/BedCheck.sln --no-build --verbosity normal --configuration Release
