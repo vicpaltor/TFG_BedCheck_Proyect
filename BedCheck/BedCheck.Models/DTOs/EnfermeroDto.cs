@@ -6,6 +6,8 @@ namespace BedCheck.Models.DTOs
     // Usamos el nombre simplificado que indicaste
     public class EnfermeroDto // Antes: CrearEnfermeroDTO
     {
+        public int IdEnfermero { get; set; }
+
         [Required(ErrorMessage = "El nombre es obligatorio")]
         public string NombreEnfermero { get; set; }
 

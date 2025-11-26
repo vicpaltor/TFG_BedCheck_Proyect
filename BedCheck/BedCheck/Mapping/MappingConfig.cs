@@ -25,6 +25,8 @@ namespace BedCheck.Mapping
                 .ForMember(dest => dest.Tratamientos, opt => opt.MapFrom(src => src.ListTratamiento))
                 .ReverseMap();
 
+            CreateMap<Enfermero, EnfermeroDto>().ReverseMap();
+
         }
     }
 }

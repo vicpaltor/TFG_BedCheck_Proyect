@@ -1,43 +1,67 @@
 ﻿using AutoMapper;
-using BedCheck.AccesoDatos.Data.Repository;
 using BedCheck.AccesoDatos.Data.Repository.IRepository;
 using BedCheck.Models;
 using BedCheck.Models.DTOs;
 using BedCheck.Servicios.Interfaces;
-using System.Threading.Tasks;
 
 namespace BedCheck.Servicios.Implementacion
 {
     public class EnfermeroService : IEnfermeroService
     {
-        private readonly IEnfermeroRepositorio _enfermeroRepository;
+        private readonly IContenedorTrabajo _unitOfWork;
         private readonly IMapper _mapper;
 
-        public EnfermeroService(IEnfermeroRepositorio enfermeroRepository, IMapper mapper)
+        public EnfermeroService(IContenedorTrabajo unitOfWork, IMapper mapper)
         {
-            _enfermeroRepository = enfermeroRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<EnfermeroDto>> ObtenerTodos()
+        {
+            var lista = _unitOfWork.Enfermero.GetAll();
+            return _mapper.Map<IEnumerable<EnfermeroDto>>(lista);
+        }
+
+        public async Task<EnfermeroDto> ObtenerPorId(int id)
+        {
+            var obj = _unitOfWork.Enfermero.Get(id);
+            return _mapper.Map<EnfermeroDto>(obj);
         }
 
         public async Task<int> Crear(EnfermeroDto dto)
         {
-      
             if (string.IsNullOrWhiteSpace(dto.NombreEnfermero))
-            {
-                throw new ArgumentException("El nombre del enfermero no puede estar vacío.", nameof(dto.NombreEnfermero));
-            }
+                throw new ArgumentException("El nombre es obligatorio.");
 
             if (string.IsNullOrWhiteSpace(dto.RolEnfermero))
-            {
-                // Lanzamos la excepción que el test está esperando.
-                throw new ArgumentException("El rol del enfermero es obligatorio.", nameof(dto.RolEnfermero));
-            }
+                throw new ArgumentException("El rol es obligatorio.");
 
-            var enfermeroEntity = _mapper.Map<Enfermero>(dto);
-            await _enfermeroRepository.AddAsync(enfermeroEntity);
-            return enfermeroEntity.IdEnfermero;
+            var entidad = _mapper.Map<Enfermero>(dto);
 
+            // ATENCIÓN: Si tu repositorio no tiene AddAsync, usa Add normal
+            _unitOfWork.Enfermero.Add(entidad);
+            _unitOfWork.Save();
+
+            return entidad.IdEnfermero;
         }
 
+        public async Task<bool> Actualizar(EnfermeroDto dto)
+        {
+            var entidad = _mapper.Map<Enfermero>(dto);
+            _unitOfWork.Enfermero.Update(entidad);
+            _unitOfWork.Save();
+            return true;
+        }
+
+        public async Task<bool> Borrar(int id)
+        {
+            var entidad = _unitOfWork.Enfermero.Get(id);
+            if (entidad == null) return false;
+
+            _unitOfWork.Enfermero.Remove(entidad);
+            _unitOfWork.Save();
+            return true;
+        }
     }
 }

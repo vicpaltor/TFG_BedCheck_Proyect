@@ -1,103 +1,83 @@
-﻿using BedCheck.AccesoDatos.Data.Repository.IRepository;
-using BedCheck.Models;
+﻿using BedCheck.Models.DTOs;
+using BedCheck.Servicios.Interfaces;
+using BedCheck.Utilidades; // Para CNT
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BedCheck.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    [Authorize(Roles = CNT.Administrador)]
     [Area("Admin")]
     public class EnfermerosController : Controller
     {
+        private readonly IEnfermeroService _servicio;
 
-        private readonly IContenedorTrabajo _contenedorTrabajo;
-
-        public EnfermerosController(IContenedorTrabajo contenedorTrabajo)
+        public EnfermerosController(IEnfermeroService servicio)
         {
-            _contenedorTrabajo = contenedorTrabajo;
+            _servicio = servicio;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index() { return View(); }
+
+        [HttpGet]
+        public IActionResult Create() { return View(); }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(EnfermeroDto dto)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _servicio.Crear(dto);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (ArgumentException ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                }
+            }
+            return View(dto);
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Edit(int? id)
         {
-            return View();
+            if (id == null) return NotFound();
+            var dto = await _servicio.ObtenerPorId(id.Value);
+            if (dto == null) return NotFound();
+            return View(dto);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Enfermero enfermero)
+        public async Task<IActionResult> Edit(EnfermeroDto dto)
         {
             if (ModelState.IsValid)
             {
-                _contenedorTrabajo.Enfermero.Add(enfermero);
-                _contenedorTrabajo.Save();
+                await _servicio.Actualizar(dto);
                 return RedirectToAction(nameof(Index));
-
             }
-            return View(enfermero);
+            return View(dto);
         }
 
-        [HttpGet]
-        public IActionResult Edit(int id)
+        #region API
+        [HttpGet("/Admin/Enfermeros/GetAll")]
+        public async Task<IActionResult> GetAll()
         {
-            Enfermero enfermero = new Enfermero();
-            enfermero = _contenedorTrabajo.Enfermero.Get(id);
-            if (enfermero == null)
-            {
-                return NotFound();
-
-            }
-            return View(enfermero);
+            var lista = await _servicio.ObtenerTodos();
+            return Json(new { data = lista });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(Enfermero enfermero, int id)
+        [HttpDelete("/Admin/Enfermeros/Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            if (ModelState.IsValid)
-            {
-                //Logica para guardar en BD
-                //habitacion.CamasOcupadas = 0;
-                //habitacion.ListEnfermedadesTratamientos = new List<string>();
-
-                enfermero.IdEnfermero = id;
-
-                _contenedorTrabajo.Enfermero.Update(enfermero);
-                _contenedorTrabajo.Save();
-                return RedirectToAction(nameof(Index));
-
-            }
-            return View(enfermero);
-        }
-
-        #region Llamadas a la API
-        [HttpGet]
-        public IActionResult GetAll() 
-        {
-            return Json(new { data = _contenedorTrabajo.Enfermero.GetAll() });
-        
-        }
-
-        [HttpDelete]
-        public IActionResult Delete(int id)
-        {
-            var objFromDb = _contenedorTrabajo.Enfermero.Get(id);
-            if (objFromDb == null)
-            {
-                return Json(new { success = false, message = "Error borrando enfermero" });
-            }
-
-            _contenedorTrabajo.Enfermero.Remove(objFromDb);
-            _contenedorTrabajo.Save();
-            return Json(new { success = true, message = "Enfermero Borrado Correctamente" });
+            var borrado = await _servicio.Borrar(id);
+            if (borrado) return Json(new { success = true, message = "Borrado correctamente" });
+            return Json(new { success = false, message = "Error al borrar" });
         }
         #endregion
-
     }
 }
