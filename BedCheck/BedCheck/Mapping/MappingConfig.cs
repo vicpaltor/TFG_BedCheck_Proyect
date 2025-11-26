@@ -27,6 +27,16 @@ namespace BedCheck.Mapping
 
             CreateMap<Enfermero, EnfermeroDto>().ReverseMap();
 
+            
+            CreateMap<Operacion, OperacionDto>()
+                .ForMember(dest => dest.NombreOperacion, opt => opt.MapFrom(src => src.StrNombreOperacion))
+                .ForMember(dest => dest.EstadoOperacion, opt => opt.MapFrom(src => src.StrEstadoOperacion))
+                .ForMember(dest => dest.FechaOperacion, opt => opt.MapFrom(src => src.StrFechaOperacion))
+                // Aplanado de datos para la tabla (Flattening)
+                .ForMember(dest => dest.NombrePaciente, opt => opt.MapFrom(src => src.Paciente.StrNombrePaciente))
+                .ForMember(dest => dest.NombreCama, opt => opt.MapFrom(src => src.Cama.NombreCama))
+                .ReverseMap();
+
         }
     }
 }

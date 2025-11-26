@@ -49,6 +49,7 @@ builder.Services.AddScoped<ICamaService, CamaService>();
 builder.Services.AddScoped<IHabitacionService, HabitacionService>();
 builder.Services.AddScoped<IPacienteService, PacienteService>();
 builder.Services.AddScoped<IEnfermeroService, EnfermeroService>();
+builder.Services.AddScoped<IOperacionService, OperacionService>();
 
 
 // AutoMapper
