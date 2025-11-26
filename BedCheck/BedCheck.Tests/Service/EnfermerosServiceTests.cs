@@ -43,13 +43,30 @@ namespace BedCheck.Tests.Service
             var enfermeroDtoInvalido = new EnfermeroDto { NombreEnfermero = "", RolEnfermero = "Supervisor" };
 
             // ACT & ASSERT (Ejecución y Verificación)
-            // Esperamos que se lance una excepción cuando intentemos crear el enfermero.
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 await _enfermerosService.Crear(enfermeroDtoInvalido);
             });
 
             // Verificamos que NUNCA se llama al repositorio (¡no debe guardarse!)
+            _mockEnfermeroRepository.Verify(repo => repo.AddAsync(It.IsAny<Enfermero>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task CrearEnfermero_RolVacio_DebeLanzarExcepcion()
+        {
+            // ARRANGE 
+            // DTO inválido: Rol vacío
+            var enfermeroDtoInvalido = new EnfermeroDto { NombreEnfermero = "Juan", RolEnfermero = "" };
+
+            // ACT & ASSERT 
+            // Esperamos que se lance una excepción.
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
+            {
+                await _enfermerosService.Crear(enfermeroDtoInvalido);
+            });
+
+            // Verificamos que NUNCA se llama al repositorio
             _mockEnfermeroRepository.Verify(repo => repo.AddAsync(It.IsAny<Enfermero>()), Times.Never);
         }
 

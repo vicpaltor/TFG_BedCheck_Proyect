@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # 1. SERVICIO DE BASE DE DATOS (SQL Server)
+  db:
+    container_name: bedcheck_db
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "TuPasswordSeguro123" # <<< ¡CAMBIA ESTA CONTRASEÑA!
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - dbdata:/var/opt/mssql
+
+  # 2. SERVICIO DE LA APLICACIÓN .NET
+  bedcheck_app:
+    build:
+      context: . # Usa el Dockerfile de esta carpeta
+      dockerfile: Dockerfile
+    container_name: bedcheck_app
+    ports:
+      - "80:8080" # Mapea puerto 80 local a 8080 del contenedor
+    depends_on:
+      - db
+    environment:
+      # Cadena de conexión usando 'db' como hostname
+      - ConnectionStrings__DefaultConnection=Server=db;Database=BedCheckDB;User Id=SA;Password=TuPasswordSeguro123;TrustServerCertificate=True
+
+volumes:
+  dbdata:

@@ -1,0 +1,14 @@
+# Excluir carpetas binarias y de objetos de .NET
+**/bin/
+**/obj/
+
+# Excluir las carpetas de paquetes locales
+**/packages/
+
+# Excluir archivos de configuración de Visual Studio y SO
+.vs/
+.git/
+.gitignore
+
+# Excluir el archivo de configuración global de NuGet que causa el problema.
+NuGet.Config

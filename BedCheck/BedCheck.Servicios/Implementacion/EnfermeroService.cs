@@ -27,10 +27,17 @@ namespace BedCheck.Servicios.Implementacion
                 throw new ArgumentException("El nombre del enfermero no puede estar vacío.", nameof(dto.NombreEnfermero));
             }
 
+            if (string.IsNullOrWhiteSpace(dto.RolEnfermero))
+            {
+                // Lanzamos la excepción que el test está esperando.
+                throw new ArgumentException("El rol del enfermero es obligatorio.", nameof(dto.RolEnfermero));
+            }
+
             var enfermeroEntity = _mapper.Map<Enfermero>(dto);
             await _enfermeroRepository.AddAsync(enfermeroEntity);
             return enfermeroEntity.IdEnfermero;
 
         }
+
     }
 }
