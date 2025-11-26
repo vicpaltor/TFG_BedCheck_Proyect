@@ -1,31 +1,24 @@
-version: '3.8'
+version: '3.4'
 
 services:
-  # 1. SERVICIO DE BASE DE DATOS (SQL Server)
-  db:
-    container_name: bedcheck_db
-    image: mcr.microsoft.com/mssql/server:2019-latest
+  bedcheckdb: # El contenedor de la Base de Datos
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: bedcheck_sql
     environment:
-      SA_PASSWORD: "TuPasswordSeguro123" # <<< ¡CAMBIA ESTA CONTRASEÑA!
-      ACCEPT_EULA: "Y"
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password_123!  # <--- 1. Contraseña FUERTE
     ports:
       - "1433:1433"
-    volumes:
-      - dbdata:/var/opt/mssql
 
-  # 2. SERVICIO DE LA APLICACIÓN .NET
-  bedcheck_app:
+  bedcheck: # Tu Web
+    image: ${DOCKER_REGISTRY-}bedcheck
     build:
-      context: . # Usa el Dockerfile de esta carpeta
-      dockerfile: Dockerfile
-    container_name: bedcheck_app
+      context: .
+      dockerfile: BedCheck/Dockerfile
     ports:
-      - "80:8080" # Mapea puerto 80 local a 8080 del contenedor
-    depends_on:
-      - db
+      - "8080:8080" # O el puerto que prefieras
     environment:
-      # Cadena de conexión usando 'db' como hostname
-      - ConnectionStrings__DefaultConnection=Server=db;Database=BedCheckDB;User Id=SA;Password=TuPasswordSeguro123;TrustServerCertificate=True
-
-volumes:
-  dbdata:
+      # <--- 2. La MISMA contraseña aquí abajo. Y fíjate en TrustServerCertificate=True
+      - ConnectionStrings__ConexionSQL=Server=bedcheckdb;Database=BedCheckBD_Docker;User Id=sa;Password=Password_123!;TrustServerCertificate=True;MultipleActiveResultSets=true
+    depends_on:
+      - bedcheckdb

@@ -15,6 +15,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BedCheck.Tests", "BedCheck.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BedCheck.Servicios", "BedCheck.Servicios\BedCheck.Servicios.csproj", "{1D8B8B21-F4D5-4396-B160-05A75E5AF109}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementos de la solución", "Elementos de la solución", "{61A6FF1E-10E5-4315-A743-1261496D2E5C}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignorel = .dockerignorel
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -1,6 +1,13 @@
 # Excluir carpetas binarias y de objetos de .NET
-**/bin/
-**/obj/
+**/.dockerignore
+**/.env
+**/.git
+**/.gitignore
+**/.vs
+**/.vscode
+**/bin
+**/obj
+**/TestResults
 
 # Excluir las carpetas de paquetes locales
 **/packages/

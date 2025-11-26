@@ -1,4 +1,4 @@
-using BedCheck.AccesoDatos.Data.Repository;
+Ôªøusing BedCheck.AccesoDatos.Data.Repository;
 using BedCheck.AccesoDatos.Data.Repository.IRepository;
 using BedCheck.Data;
 using BedCheck.Middleware;
@@ -13,7 +13,7 @@ using BedCheck.Servicios.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-#region ConfiguraciÛn de Serilog (Logging)
+#region Configuraci√≥n de Serilog (Logging)
 // ============================================================
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
@@ -25,7 +25,7 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 #endregion
 
-#region ConfiguraciÛn de Base de Datos e Identity
+#region Configuraci√≥n de Base de Datos e Identity
 // ============================================================
 var connectionString = builder.Configuration.GetConnectionString("ConexionSQL")
     ?? throw new InvalidOperationException("Connection string 'ConexionSQL' not found.");
@@ -57,16 +57,16 @@ builder.Services.AddAutoMapper(typeof(BedCheck.Mapping.MappingConfig));
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<ApplicationDbContext>();
 
-// InyecciÛn de Dependencias (Repositorios)
+// Inyecci√≥n de Dependencias (Repositorios)
 builder.Services.AddScoped<IContenedorTrabajo, ContenedorTrabajo>();
 
-// SEGURIDAD: RATE LIMITING (ProtecciÛn contra ataques DDoS)
+// SEGURIDAD: RATE LIMITING (Protecci√≥n contra ataques DDoS)
 builder.Services.AddRateLimiter(options =>
 {
-    // Si se pasan del lÌmite, devolvemos error 429 (Too Many Requests)
+    // Si se pasan del l√≠mite, devolvemos error 429 (Too Many Requests)
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
-    // Definimos una polÌtica global:
+    // Definimos una pol√≠tica global:
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
         RateLimitPartition.GetFixedWindowLimiter(
             // Agrupamos por IP del usuario (para limitar por persona)
@@ -74,7 +74,7 @@ builder.Services.AddRateLimiter(options =>
             factory: partition => new FixedWindowRateLimiterOptions
             {
                 AutoReplenishment = true,
-                PermitLimit = 100,       // M·ximo 100 peticiones...
+                PermitLimit = 100,       // M√°ximo 100 peticiones...
                 Window = TimeSpan.FromMinutes(1), // ...cada minuto
                 QueueLimit = 0           // No encolamos peticiones extra, las rechazamos
             }));
@@ -82,7 +82,7 @@ builder.Services.AddRateLimiter(options =>
 
 #endregion
 
-#region ConfiguraciÛn de Swagger (DocumentaciÛn API)
+#region Configuraci√≥n de Swagger (Documentaci√≥n API)
 // ============================================================
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -90,20 +90,48 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+#region MIGRACI√ìN AUTOM√ÅTICA (Para Docker)
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    var dbContext = services.GetRequiredService<ApplicationDbContext>();
+
+    // Intentamos conectar 5 veces esperando un poco entre medias
+    for (int i = 0; i < 5; i++)
+    {
+        try
+        {
+            if (dbContext.Database.GetPendingMigrations().Any())
+            {
+                dbContext.Database.Migrate();
+                logger.LogInformation("‚úÖ Migraciones aplicadas correctamente en Docker.");
+            }
+            break; // Si funciona, salimos del bucle
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning($"‚ö†Ô∏è Intento {i + 1}/5 fallido: SQL Server a√∫n no est√° listo. Esperando...");
+            System.Threading.Thread.Sleep(5000); // Esperamos 5 segundos antes de reintentar
+        }
+    }
+}
+#endregion
+
 #region SEGURIDAD AVANZADA: CABECERAS HTTP
 // ============================================================
 app.Use(async (context, next) =>
 {
-    // 1. Evita que tu web se abra en un iframe (ProtecciÛn contra Clickjacking)
+    // 1. Evita que tu web se abra en un iframe (Protecci√≥n contra Clickjacking)
     context.Response.Headers.Append("X-Frame-Options", "DENY");
 
-    // 2. Evita que el navegador "adivine" el tipo de archivo (ProtecciÛn MIME-Sniffing)
+    // 2. Evita que el navegador "adivine" el tipo de archivo (Protecci√≥n MIME-Sniffing)
     context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
 
     // 3. Activa el filtro anti-XSS de los navegadores antiguos
     context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
 
-    // 4. Controla cu·nta informaciÛn se envÌa al salir de tu web hacia otra
+    // 4. Controla cu√°nta informaci√≥n se env√≠a al salir de tu web hacia otra
     context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
 
     // 5. (Opcional) Content Security Policy - Muy estricto, puede romper estilos si no se configura bien.
@@ -127,7 +155,7 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    // Middleware personalizado para errores en producciÛn
+    // Middleware personalizado para errores en producci√≥n
     app.UseMiddleware<ExceptionHandlingMiddleware>();
     app.UseExceptionHandler("/Home/Error");
 }
