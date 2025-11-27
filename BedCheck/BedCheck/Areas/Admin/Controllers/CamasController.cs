@@ -74,14 +74,16 @@ namespace BedCheck.Areas.Admin.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null) return NotFound();
-
+            // 1. Validaciones de entrada
+            if (id == null || id == 0) return NotFound();
+            // 2. Recuperar datos reales del servicio
             var camaDto = await _camaService.ObtenerPorId(id.Value);
+            // 3. Si no existe en BD, devolver error 404
             if (camaDto == null) return NotFound();
-
+            // 4. creamos el viewmodel
             CamaVM camaVM = new CamaVM()
             {
-                Cama = new CamaDto(),
+                Cama = camaDto,
                 ListaHabitaciones = _camaService.ObtenerListaHabitaciones()
             };
             return View(camaVM);
@@ -93,15 +95,26 @@ namespace BedCheck.Areas.Admin.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> Edit(CamaVM camaVM)
         {
+            if (camaVM.Cama.IdCama == 0) return NotFound();
+
             if (ModelState.IsValid)
             {
                 var archivos = HttpContext.Request.Form.Files;
                 IFormFile? imagen = archivos.Count > 0 ? archivos[0] : null;
 
                 // LLAMADA AL SERVICIO
+
                 bool resultado = await _camaService.Actualizar(camaVM.Cama, imagen, _hostingEnvironment.WebRootPath);
 
-                if (resultado) return RedirectToAction(nameof(Index));
+                if (resultado)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    // AÑADIR ESTO: Para que el usuario sepa que algo pasó
+                    ModelState.AddModelError(string.Empty, "Error al actualizar. Verifique que el nombre no esté duplicado.");
+                }
             }
 
             camaVM.ListaHabitaciones = _camaService.ObtenerListaHabitaciones();
