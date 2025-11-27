@@ -7,12 +7,14 @@ namespace BedCheck.Servicios.Interfaces
     {
         Task<IEnumerable<OperacionDto>> ObtenerTodas();
         Task<OperacionDto> ObtenerPorId(int id);
-        Task<bool> Crear(OperacionDto dto);
-        Task<bool> Actualizar(OperacionDto dto);
+
+        // Devuelve string con mensaje de error, o vacío si éxito
+        Task<string> Crear(OperacionDto dto);
+        Task<string> Actualizar(OperacionDto dto);
         Task<bool> Borrar(int id);
 
-        // Métodos para llenar los desplegables en la vista
+        // Métodos para llenar los desplegables
+        IEnumerable<SelectListItem> ObtenerListaCamasLibres();
         IEnumerable<SelectListItem> ObtenerListaPacientes();
-        IEnumerable<SelectListItem> ObtenerListaCamas();
     }
 }

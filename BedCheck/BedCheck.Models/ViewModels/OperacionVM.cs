@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using BedCheck.Models.DTOs;
 
 namespace BedCheck.Models.ViewModels
 {
     public class OperacionVM
     {
-        public Operacion Operacion { get; set; }
+        public OperacionDto Operacion { get; set; } // Ahora usa el DTO
+
+        [ValidateNever]
         public IEnumerable<SelectListItem> ListaCamas { get; set; }
 
+        [ValidateNever]
         public IEnumerable<SelectListItem> ListaPacientes { get; set; }
     }
 }

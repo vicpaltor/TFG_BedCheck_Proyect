@@ -4,17 +4,11 @@ using BedCheck.Models;
 using BedCheck.Models.DTOs;
 using BedCheck.Servicios.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BedCheck.Servicios.Implementacion
 {
     public class OperacionService : IOperacionService
     {
-
         private readonly IContenedorTrabajo _unitOfWork;
         private readonly IMapper _mapper;
 
@@ -23,10 +17,11 @@ namespace BedCheck.Servicios.Implementacion
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
         public async Task<IEnumerable<OperacionDto>> ObtenerTodas()
         {
-            // IMPORTANTE: Incluir Paciente y Cama para poder mostrar sus nombres
-            var lista = _unitOfWork.Operacion.GetAll(includeProperties: "Paciente,Cama");
+            // Incluimos Cama y Paciente para poder mapear sus nombres
+            var lista = _unitOfWork.Operacion.GetAll(includeProperties: "Cama,Paciente");
             return _mapper.Map<IEnumerable<OperacionDto>>(lista);
         }
 
@@ -36,21 +31,82 @@ namespace BedCheck.Servicios.Implementacion
             return _mapper.Map<OperacionDto>(obj);
         }
 
-        public async Task<bool> Crear(OperacionDto dto)
+        public IEnumerable<SelectListItem> ObtenerListaCamasLibres()
         {
-
-            var entidad = _mapper.Map<Operacion>(dto);
-            _unitOfWork.Operacion.Add(entidad);
-            _unitOfWork.Save();
-            return true;
+            // Solo devolvemos camas que NO estén usadas (CamaUsada == false)
+            return _unitOfWork.Cama.GetAll(c => c.CamaUsada == false)
+                .Select(i => new SelectListItem
+                {
+                    Text = i.NombreCama,
+                    Value = i.IdCama.ToString()
+                });
         }
 
-        public async Task<bool> Actualizar(OperacionDto dto)
+        public IEnumerable<SelectListItem> ObtenerListaPacientes()
         {
+            return _unitOfWork.Paciente.GetAll()
+                .Select(i => new SelectListItem
+                {
+                    Text = i.StrNombrePaciente,
+                    Value = i.IdPaciente.ToString()
+                });
+        }
+
+        public async Task<string> Crear(OperacionDto dto)
+        {
+            // 1. Validar que la cama esté libre (Doble check de seguridad)
+            var cama = _unitOfWork.Cama.Get(dto.CamaId);
+            if (cama == null) return "La cama seleccionada no existe.";
+            if (cama.CamaUsada) return "La cama seleccionada ya está ocupada.";
+
+            // 2. Mapear
             var entidad = _mapper.Map<Operacion>(dto);
+
+            // 3. Lógica Transaccional: Ocupar la cama
+            cama.CamaUsada = true;
+            _unitOfWork.Cama.Update(cama); // Marcamos la cama como ocupada
+
+            // 4. Guardar Operación
+            _unitOfWork.Operacion.Add(entidad);
+            _unitOfWork.Save(); // Guarda ambos cambios (Cama y Operacion) en una transacción (por defecto en EF Core)
+
+            return ""; // Éxito
+        }
+
+        public async Task<string> Actualizar(OperacionDto dto)
+        {
+            var operacionDb = _unitOfWork.Operacion.Get(dto.IdOperacion);
+            if (operacionDb == null) return "Operación no encontrada.";
+
+            // LOGICA COMPLEJA: Cambio de cama
+            if (operacionDb.CamaId != dto.CamaId)
+            {
+                // 1. Liberar la cama antigua
+                var camaAntigua = _unitOfWork.Cama.Get(operacionDb.CamaId);
+                if (camaAntigua != null)
+                {
+                    camaAntigua.CamaUsada = false;
+                    _unitOfWork.Cama.Update(camaAntigua);
+                }
+
+                // 2. Ocupar la cama nueva
+                var camaNueva = _unitOfWork.Cama.Get(dto.CamaId);
+                if (camaNueva == null) return "La nueva cama no existe.";
+                if (camaNueva.CamaUsada) return "La nueva cama ya está ocupada.";
+
+                camaNueva.CamaUsada = true;
+                _unitOfWork.Cama.Update(camaNueva);
+            }
+
+            // Mapear el resto de cambios
+            var entidad = _mapper.Map<Operacion>(dto);
+
+            // Truco para EF Core: Desatachar la entidad leída anteriormente para evitar conflictos
+            _unitOfWork.Detach(operacionDb);
+
             _unitOfWork.Operacion.Update(entidad);
             _unitOfWork.Save();
-            return true;
+            return "";
         }
 
         public async Task<bool> Borrar(int id)
@@ -58,29 +114,17 @@ namespace BedCheck.Servicios.Implementacion
             var entidad = _unitOfWork.Operacion.Get(id);
             if (entidad == null) return false;
 
+            // Lógica Transaccional: Al borrar operación, LIBERAMOS la cama
+            var cama = _unitOfWork.Cama.Get(entidad.CamaId);
+            if (cama != null)
+            {
+                cama.CamaUsada = false;
+                _unitOfWork.Cama.Update(cama);
+            }
+
             _unitOfWork.Operacion.Remove(entidad);
             _unitOfWork.Save();
             return true;
-        }
-
-        // Rellenar Dropdowns
-        public IEnumerable<SelectListItem> ObtenerListaPacientes()
-        {
-            return _unitOfWork.Paciente.GetAll().Select(i => new SelectListItem
-            {
-                Text = i.StrNombrePaciente,
-                Value = i.IdPaciente.ToString()
-            });
-        }
-
-        public IEnumerable<SelectListItem> ObtenerListaCamas()
-        {
-            // Opcional: Filtrar solo camas "Libres" o "Disponibles"
-            return _unitOfWork.Cama.GetAll(c => c.EstadoCama == "Disponible" || c.EstadoCama == "Libre").Select(i => new SelectListItem
-            {
-                Text = i.NombreCama,
-                Value = i.IdCama.ToString()
-            });
         }
     }
 }

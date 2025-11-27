@@ -1,43 +1,39 @@
-﻿using BedCheck.AccesoDatos.Data.Repository.IRepository;
-using BedCheck.Models;
+﻿using BedCheck.Models.DTOs;
 using BedCheck.Models.ViewModels;
+using BedCheck.Servicios.Interfaces;
+using BedCheck.Utilidades;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.Xml;
 
 namespace BedCheck.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Enfermero")]
+    [Authorize(Roles = CNT.Administrador)]
     [Area("Admin")]
     public class OperacionesController : Controller
     {
-        private readonly IContenedorTrabajo _contenedorTrabajo;
-        private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IOperacionService _servicio;
 
-        public OperacionesController(IContenedorTrabajo contenedorTrabajo, IWebHostEnvironment hostingEnvironment)
+        public OperacionesController(IOperacionService servicio)
         {
-            _contenedorTrabajo = contenedorTrabajo;
-            _hostingEnvironment = hostingEnvironment;
+            _servicio = servicio;
         }
 
         [HttpGet]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index()
         {
             return View();
         }
 
         [HttpGet]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Create(int id)
         {
             OperacionVM operacionVM = new OperacionVM()
             {
-                Operacion = new BedCheck.Models.Operacion()
-                {
-                    CamaId = id // Preseleccionar la cama con el ID
-                },
-                ListaCamas = _contenedorTrabajo.Cama.GetListaOperaciones(),
-                ListaPacientes = _contenedorTrabajo.Paciente.GetListaOperaciones()
+                Operacion = new OperacionDto(),
+                ListaCamas = _servicio.ObtenerListaCamasLibres(),
+                ListaPacientes = _servicio.ObtenerListaPacientes()
             };
             return View(operacionVM);
         }
