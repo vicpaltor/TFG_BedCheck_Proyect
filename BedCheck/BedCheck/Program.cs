@@ -10,176 +10,222 @@ using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 using BedCheck.Servicios.Implementacion;
 using BedCheck.Servicios.Interfaces;
+using BedCheck.AccesoDatos.Data.Inicializador;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-#region Configuración de Serilog (Logging)
-// ============================================================
-Log.Logger = new LoggerConfiguration()
+SerilogConfig();
+
+IdentityConfig();
+
+WebService();
+
+SwaggerConfig();
+
+var app = builder.Build();
+
+DockerConfig();
+
+SecurityAvance();
+
+MiddlewareConfig();
+
+SeedDatabase();
+
+app.Run();
+
+#region Funciones
+
+void SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        dbInitializer.Inicializar();
+    }
+}
+
+void SerilogConfig() {
+
+    Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .WriteTo.File("Logs/bedcheck_log-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
-builder.Host.UseSerilog();
-#endregion
+    builder.Host.UseSerilog();
 
-#region Configuración de Base de Datos e Identity
-// ============================================================
-var connectionString = builder.Configuration.GetConnectionString("ConexionSQL")
-    ?? throw new InvalidOperationException("Connection string 'ConexionSQL' not found.");
+}
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+void MiddlewareConfig(){
 
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-    options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultUI();
-#endregion
-
-#region Servicios Web (MVC, AutoMapper, HealthChecks)
-// ============================================================
-builder.Services.AddControllersWithViews();
-
-builder.Services.AddScoped<ICamaService, CamaService>();
-builder.Services.AddScoped<IHabitacionService, HabitacionService>();
-builder.Services.AddScoped<IPacienteService, PacienteService>();
-builder.Services.AddScoped<IEnfermeroService, EnfermeroService>();
-builder.Services.AddScoped<IOperacionService, OperacionService>();
-
-
-// AutoMapper
-builder.Services.AddAutoMapper(typeof(BedCheck.Mapping.MappingConfig));
-
-// Health Checks
-builder.Services.AddHealthChecks()
-    .AddDbContextCheck<ApplicationDbContext>();
-
-// Inyección de Dependencias (Repositorios)
-builder.Services.AddScoped<IContenedorTrabajo, ContenedorTrabajo>();
-
-// SEGURIDAD: RATE LIMITING (Protección contra ataques DDoS)
-builder.Services.AddRateLimiter(options =>
-{
-    // Si se pasan del límite, devolvemos error 429 (Too Many Requests)
-    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-
-    // Definimos una política global:
-    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-        RateLimitPartition.GetFixedWindowLimiter(
-            // Agrupamos por IP del usuario (para limitar por persona)
-            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonimo",
-            factory: partition => new FixedWindowRateLimiterOptions
-            {
-                AutoReplenishment = true,
-                PermitLimit = 100,       // Máximo 100 peticiones...
-                Window = TimeSpan.FromMinutes(1), // ...cada minuto
-                QueueLimit = 0           // No encolamos peticiones extra, las rechazamos
-            }));
-});
-
-#endregion
-
-#region Configuración de Swagger (Documentación API)
-// ============================================================
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-#endregion
-
-var app = builder.Build();
-
-#region MIGRACIÓN AUTOMÁTICA (Para Docker)
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var logger = services.GetRequiredService<ILogger<Program>>();
-    var dbContext = services.GetRequiredService<ApplicationDbContext>();
-
-    // Intentamos conectar 5 veces esperando un poco entre medias
-    for (int i = 0; i < 5; i++)
+    // Manejo de Excepciones
+    if (app.Environment.IsDevelopment())
     {
-        try
+        app.UseMigrationsEndPoint();
+        // Swagger solo visible en desarrollo
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+    else
+    {
+        // Middleware personalizado para errores en producción
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
+        app.UseExceptionHandler("/Home/Error");
+    }
+
+    app.UseStaticFiles();
+
+    app.UseRateLimiter();
+
+    app.UseRouting();
+
+    app.UseAuthorization();
+
+    // Mapeo de Rutas
+    app.MapControllerRoute(
+        name: "default",
+        pattern: "{area=Empleado}/{controller=Home}/{action=Index}/{id?}");
+
+    app.MapRazorPages();
+
+    // Ruta de Salud
+    app.MapHealthChecks("/health");
+
+}
+
+void SecurityAvance() {
+    app.Use(async (context, next) =>
+    {
+        // 1. Evita que tu web se abra en un iframe (Protección contra Clickjacking)
+        context.Response.Headers.Append("X-Frame-Options", "DENY");
+
+        // 2. Evita que el navegador "adivine" el tipo de archivo (Protección MIME-Sniffing)
+        context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+
+        // 3. Activa el filtro anti-XSS de los navegadores antiguos
+        context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
+
+        // 4. Controla cuánta información se envía al salir de tu web hacia otra
+        context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
+
+        // 5. (Opcional) Content Security Policy - Muy estricto, puede romper estilos si no se configura bien.
+        // De momento lo dejamos comentado para no romper DataTables o Bootstrap.
+        // context.Response.Headers.Append("Content-Security-Policy", "default-src 'self';");
+
+        await next();
+    });
+}
+
+void DockerConfig() {
+    #region MIGRACIÓN AUTOMÁTICA (Para Docker)
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        var dbContext = services.GetRequiredService<ApplicationDbContext>();
+
+        // Intentamos conectar 5 veces esperando un poco entre medias
+        for (int i = 0; i < 5; i++)
         {
-            if (dbContext.Database.GetPendingMigrations().Any())
+            try
             {
-                dbContext.Database.Migrate();
-                logger.LogInformation("✅ Migraciones aplicadas correctamente en Docker.");
+                if (dbContext.Database.GetPendingMigrations().Any())
+                {
+                    dbContext.Database.Migrate();
+                    logger.LogInformation("✅ Migraciones aplicadas correctamente en Docker.");
+                }
+                break; // Si funciona, salimos del bucle
             }
-            break; // Si funciona, salimos del bucle
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning($"⚠️ Intento {i + 1}/5 fallido: SQL Server aún no está listo. Esperando...");
-            System.Threading.Thread.Sleep(5000); // Esperamos 5 segundos antes de reintentar
+            catch (Exception ex)
+            {
+                logger.LogWarning($"⚠️ Intento {i + 1}/5 fallido: SQL Server aún no está listo. Esperando...");
+                System.Threading.Thread.Sleep(5000); // Esperamos 5 segundos antes de reintentar
+            }
         }
     }
-}
-#endregion
-
-#region SEGURIDAD AVANZADA: CABECERAS HTTP
-// ============================================================
-app.Use(async (context, next) =>
-{
-    // 1. Evita que tu web se abra en un iframe (Protección contra Clickjacking)
-    context.Response.Headers.Append("X-Frame-Options", "DENY");
-
-    // 2. Evita que el navegador "adivine" el tipo de archivo (Protección MIME-Sniffing)
-    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
-
-    // 3. Activa el filtro anti-XSS de los navegadores antiguos
-    context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
-
-    // 4. Controla cuánta información se envía al salir de tu web hacia otra
-    context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
-
-    // 5. (Opcional) Content Security Policy - Muy estricto, puede romper estilos si no se configura bien.
-    // De momento lo dejamos comentado para no romper DataTables o Bootstrap.
-    // context.Response.Headers.Append("Content-Security-Policy", "default-src 'self';");
-
-    await next();
-});
-#endregion
-
-#region Pipeline de Peticiones HTTP (Middleware)
-// ============================================================
-
-// Manejo de Excepciones
-if (app.Environment.IsDevelopment())
-{
-    app.UseMigrationsEndPoint();
-    // Swagger solo visible en desarrollo
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-else
-{
-    // Middleware personalizado para errores en producción
-    app.UseMiddleware<ExceptionHandlingMiddleware>();
-    app.UseExceptionHandler("/Home/Error");
+    #endregion
 }
 
-app.UseStaticFiles();
+void SwaggerConfig() {
 
-app.UseRateLimiter();
+    #region Configuración de Swagger (Documentación API)
+    // ============================================================
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+    #endregion
 
-app.UseRouting();
+}
 
-app.UseAuthorization();
+void WebService() {
 
-// Mapeo de Rutas
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{area=Empleado}/{controller=Home}/{action=Index}/{id?}");
+    #region Servicios Web (MVC, AutoMapper, HealthChecks)
+    // ============================================================
+    builder.Services.AddControllersWithViews();
 
-app.MapRazorPages();
+    builder.Services.AddScoped<ICamaService, CamaService>();
+    builder.Services.AddScoped<IHabitacionService, HabitacionService>();
+    builder.Services.AddScoped<IPacienteService, PacienteService>();
+    builder.Services.AddScoped<IEnfermeroService, EnfermeroService>();
+    builder.Services.AddScoped<IOperacionService, OperacionService>();
+    builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
-// Ruta de Salud
-app.MapHealthChecks("/health");
+
+    // AutoMapper
+    builder.Services.AddAutoMapper(typeof(BedCheck.Mapping.MappingConfig));
+
+    // Health Checks
+    builder.Services.AddHealthChecks()
+        .AddDbContextCheck<ApplicationDbContext>();
+
+    // Inyección de Dependencias (Repositorios)
+    builder.Services.AddScoped<IContenedorTrabajo, ContenedorTrabajo>();
+
+    // SEGURIDAD: RATE LIMITING (Protección contra ataques DDoS)
+    builder.Services.AddRateLimiter(options =>
+    {
+        // Si se pasan del límite, devolvemos error 429 (Too Many Requests)
+        options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+        // Definimos una política global:
+        options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+            RateLimitPartition.GetFixedWindowLimiter(
+                // Agrupamos por IP del usuario (para limitar por persona)
+                partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonimo",
+                factory: partition => new FixedWindowRateLimiterOptions
+                {
+                    AutoReplenishment = true,
+                    PermitLimit = 100,       // Máximo 100 peticiones...
+                    Window = TimeSpan.FromMinutes(1), // ...cada minuto
+                    QueueLimit = 0           // No encolamos peticiones extra, las rechazamos
+                }));
+    });
+
+    #endregion
+
+}
+
+void IdentityConfig()
+{
+
+    #region Configuración de Base de Datos e Identity
+    // ============================================================
+    var connectionString = builder.Configuration.GetConnectionString("ConexionSQL")
+        ?? throw new InvalidOperationException("Connection string 'ConexionSQL' not found.");
+
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(connectionString));
+
+    builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+    builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+        options.SignIn.RequireConfirmedAccount = false)
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultUI();
+    #endregion
+
+}
 
 #endregion
-
-app.Run();

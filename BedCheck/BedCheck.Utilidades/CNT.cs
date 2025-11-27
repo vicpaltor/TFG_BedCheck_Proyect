@@ -11,5 +11,6 @@ namespace BedCheck.Utilidades
         public const string Administrador = "Administrador";
         public const string Registrado = "Enfermero";
         public const string Cliente = "Cliente";
+
     }
 }
